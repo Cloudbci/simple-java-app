@@ -23,7 +23,7 @@ pipeline {
         stage('Login to GitHub Container Registry') {
             steps {
                 script {
-                   sh "docker login ghcr.io -u USERNAME -p ''"
+                   sh "docker login ghcr.io -u josliniyda27 -p ''"
                 }
             }
         }
@@ -31,7 +31,8 @@ pipeline {
         stage('Tag Docker Image') {
             steps {
                 script {
-                    sh "docker tag cloudbci/simple-java-app/${IMAGE_NAME}:latest containers.cloudbci/simple-java-app/${IMAGE_NAME}:${TAG_NAME}-alpha"
+                    sh "docker tag cloudbci/simple-java-app/${IMAGE_NAME}:latest ghcr.io/cloudbci/simple-java-app/${IMAGE_NAME}:${TAG_NAME}-alpha"
+
                 }
             }
         }
@@ -39,7 +40,7 @@ pipeline {
         stage('Push Docker Image to GH Container Registry') {
             steps {
                 script {
-                    sh "docker push containers.cloudbci/simple-java-app/${IMAGE_NAME}:${TAG_NAME}-alpha"
+                    sh "docker push ghcr.io/cloudbci/simple-java-app/${IMAGE_NAME}:${TAG_NAME}-alpha"
                 }
             }
         }
