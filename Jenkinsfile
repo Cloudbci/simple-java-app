@@ -3,7 +3,7 @@ pipeline {
     environment {
         IMAGE_NAME = 'josliniyda27/cloudbci/simple-java-app/simple-java-app-image'
         TAG_NAME = 'v1.0.0'
-        GHCR_REGISTRY = 'https://ghcr.io'
+        GHCR_REGISTRY = 'ghcr.io'
         GHCR_USERNAME = credentials('ghcr-username')  
         GHCR_TOKEN = credentials('ghcr-token')     
     }
@@ -29,7 +29,7 @@ pipeline {
          stage('Login to GitHub Container Registry') {
              steps {
                 script {
-                    echo ${GHCR_TOKEN} | docker login ${GHCR_REGISTRY}/ -u USERNAME --password-stdin 
+                    echo ${GHCR_TOKEN} | docker login https://${GHCR_REGISTRY} -u USERNAME --password-stdin 
                 }
             }
         }
