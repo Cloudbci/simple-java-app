@@ -54,7 +54,7 @@ pipeline {
             stage('Docker deployment'){
              steps {
                  script {
-                       sh 'docker run -d -p 8080:8080 --name tomcattest ${GHCR_REGISTRY}/${IMAGE_NAME}:${TAG_NAME}-alpha' 
+                       sh 'docker run -d -p 8080:8080 --name tomcattest ${IMAGE_NAME}:latest' 
                    }
                 }
             }
