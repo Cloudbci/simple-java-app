@@ -29,7 +29,7 @@ pipeline {
          stage('Login to GitHub Container Registry') {
              steps {
                 script {
-                    echo ${GHCR_TOKEN} | docker login https://${GHCR_REGISTRY} -u USERNAME --password-stdin 
+                    echo "${GHCR_TOKEN}" | docker login https://${GHCR_REGISTRY} -u USERNAME --password-stdin 
                 }
             }
         }
