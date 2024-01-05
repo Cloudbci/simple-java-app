@@ -18,45 +18,45 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    sh "docker build -f Dockerfile -t ${IMAGE_NAME}:latest ."
-                }
-            }
-        }
-
         // stage('Build Docker Image') {
         //     steps {
         //         script {
-        //             // Build the Docker image
         //             sh "docker build -f Dockerfile -t ${IMAGE_NAME}:latest ."
-
-        //             // Create a Docker configuration file with the GitHub Container Registry credentials
-        //             def dockerConfigContent = """{
-        //                 "auths": {
-        //                     "${GHCR_REGISTRY}": {
-        //                         "username": "${GHCR_USERNAME}",
-        //                         "password": "${GHCR_TOKEN}"
-        //                     }
-        //                 }
-        //             }"""
-        //             writeFile file: '.docker/config.json', text: dockerConfigContent
-
-        //             // Login to GitHub Container Registry using --password-stdin
-        //             sh "cat .docker/config.json | docker login --username ${GHCR_USERNAME} --password-stdin ${GHCR_REGISTRY}"
         //         }
         //     }
         // }
 
-
-         stage('Login to GitHub Container Registry') {
-             steps {
+        stage('Build Docker Image and Login to GHCR') {
+            steps {
                 script {
-                    echo "${GHCR_TOKEN} | docker login https://${GHCR_REGISTRY} -u USERNAME --password-stdin"
+                    // Build the Docker image
+                    sh "docker build -f Dockerfile -t ${IMAGE_NAME}:latest ."
+
+                    // Create a Docker configuration file with the GitHub Container Registry credentials
+                    def dockerConfigContent = """{
+                        "auths": {
+                            "${GHCR_REGISTRY}": {
+                                "username": "${GHCR_USERNAME}",
+                                "password": "${GHCR_TOKEN}"
+                            }
+                        }
+                    }"""
+                    writeFile file: '.docker/config.json', text: dockerConfigContent
+
+                    // Login to GitHub Container Registry using --password-stdin
+                    sh "cat .docker/config.json | docker login --username ${GHCR_USERNAME} --password-stdin ${GHCR_REGISTRY}"
                 }
             }
         }
+
+
+        //  stage('Login to GitHub Container Registry') {
+        //      steps {
+        //         script {
+        //             echo "${GHCR_TOKEN} | docker login https://${GHCR_REGISTRY} -u USERNAME --password-stdin"
+        //         }
+        //     }
+        // }
 
         stage('Tag Docker Image') {
             steps {
