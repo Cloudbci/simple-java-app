@@ -1,15 +1,17 @@
 pipeline {
     agent any
     environment {
-        IMAGE_NAME = 'simple-java-app-image'
+        IMAGE_NAME = 'cloudbci/simple-java-app/simple-java-app-image'
         TAG_NAME = 'v1.0.0'
+        GHCR_REGISTRY = 'ghcr.io'
+        GHCR_USERNAME = credentials('ghcr-username')  
+        GHCR_TOKEN = credentials('ghcr-token')     
     }
 
     stages {
         stage('Maven Package') {
             steps {
                 script{
-                    //def mvnHome = tool name: 'maven3', type: 'maven'
                     sh "mvn clean package"
                     sh 'mv target/myweb*.war target/newapp.war'
                 }
@@ -19,7 +21,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh "docker build -f Dockerfile -t cloudbci/simple-java-app/${IMAGE_NAME}:latest ."
+                    sh "docker build -f Dockerfile -t ${IMAGE_NAME}:latest ."
                 }
             }
         }
@@ -27,7 +29,7 @@ pipeline {
         stage('Login to GitHub Container Registry') {
             steps {
                 script {
-                   sh "docker login ghcr.io -u josliniyda27 -p ''"
+                    sh "docker login -u ${GHCR_USERNAME} -p ${GHCR_TOKEN} ${GHCR_REGISTRY}"
                 }
             }
         }
@@ -35,7 +37,8 @@ pipeline {
         stage('Tag Docker Image') {
             steps {
                 script {
-                    sh "docker tag cloudbci/simple-java-app/${IMAGE_NAME}:latest ghcr.io/cloudbci/simple-java-app/${IMAGE_NAME}:${TAG_NAME}-alpha"
+                    // Tag the Docker image
+                    sh "docker tag ${IMAGE_NAME}:latest ${GHCR_REGISTRY}/${IMAGE_NAME}:${TAG_NAME}-alpha"
 
                 }
             }
@@ -44,7 +47,7 @@ pipeline {
         stage('Push Docker Image to GH Container Registry') {
             steps {
                 script {
-                    sh "docker push ghcr.io/cloudbci/simple-java-app/${IMAGE_NAME}:${TAG_NAME}-alpha"
+                    sh "docker push ${GHCR_REGISTRY}/${IMAGE_NAME}:${TAG_NAME}-alpha"
                 }
             }
         }
