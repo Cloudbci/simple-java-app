@@ -30,7 +30,7 @@ pipeline {
              steps {
                 script {
                     echo "${GHCR_TOKEN}"
-                    docker login https://${GHCR_REGISTRY} -u USERNAME --password-stdin 
+                    docker login "https://${GHCR_REGISTRY}" -u USERNAME --password-stdin 
                 }
             }
         }
