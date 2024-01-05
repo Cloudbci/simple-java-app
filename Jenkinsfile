@@ -28,7 +28,9 @@ pipeline {
              steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'GitHub-Token', usernameVariable: 'GHCR_USERNAME', passwordVariable: 'GHCR_TOKEN')]) {
-                    sh "docker login --username ${GHCR_USERNAME} --password-stdin ghcr.io"
+                    //sh "docker login --username ${GHCR_USERNAME} --password-stdin ghcr.io"
+                    sh "echo ${GHCR_TOKEN} | docker login --username ${GHCR_USERNAME} --password-stdin ghcr.io"
+
                     }
                 }
             }
