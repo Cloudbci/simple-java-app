@@ -51,6 +51,17 @@ pipeline {
         //         }
         //     }
         // }
+            stage('Remove Previous Container'){
+              steps {
+                 script {
+        	            try{
+        		                sh 'docker rm -f tomcattest'
+        	                }catch(error){
+        		                //  do nothing if there is an exception
+        	                }
+                        }
+              }
+            }
             stage('Docker deployment'){
              steps {
                  script {
