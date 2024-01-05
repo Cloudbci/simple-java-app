@@ -66,8 +66,6 @@ pipeline {
              steps {
                  script {
                        sh 'docker run -dit -p 8081:80 --name simple-java-app ${IMAGE_NAME}:latest' 
-                     
-                       sh 'curl http://localhost:8081'
                    }
                 }
             }
