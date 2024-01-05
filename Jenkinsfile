@@ -55,7 +55,7 @@ pipeline {
               steps {
                  script {
         	            try{
-        		                sh 'docker rm -f tomcattest'
+        		                sh 'docker rm -f simple-java-app'
         	                }catch(error){
         		                //  do nothing if there is an exception
         	                }
