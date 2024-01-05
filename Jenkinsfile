@@ -65,7 +65,7 @@ pipeline {
             stage('Docker deployment'){
              steps {
                  script {
-                       sh 'docker run -dit -p 8081:80 --name simple-java-app ${IMAGE_NAME}:latest' 
+                       sh 'docker run -dit -p 8081:8080 --name simple-java-app ${IMAGE_NAME}:latest' 
                    }
                 }
             }
