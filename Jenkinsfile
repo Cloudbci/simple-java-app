@@ -55,6 +55,7 @@ pipeline {
              steps {
                  script {
                        sh 'docker run -d -p 8081:8080 --name simple-java-app ${IMAGE_NAME}:latest' 
+                       sh 'curl http://localhost:8081'
                    }
                 }
             }
