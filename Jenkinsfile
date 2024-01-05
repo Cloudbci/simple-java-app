@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        IMAGE_NAME = 'My-simple-App-image'
+        IMAGE_NAME = 'simple-java-app-image'
         TAG_NAME = 'v1.0.0'
     }
 
