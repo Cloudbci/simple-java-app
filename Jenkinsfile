@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        IMAGE_NAME = 'josliniyda27/cloudbci/simple-java-app/simple-java-app-image'
+        IMAGE_NAME = 'cloudbci/simple-java-app/simple-java-app-image'
         TAG_NAME = 'v1.0.0'
         GHCR_REGISTRY = 'ghcr.io'
         GHCR_USERNAME = credentials('ghcr-username')  
