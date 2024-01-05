@@ -1,9 +1,9 @@
 pipeline {
     agent any
     environment {
-        IMAGE_NAME = 'cloudbci/simple-java-app/simple-java-app-image'
+        IMAGE_NAME = 'josliniyda27/cloudbci/simple-java-app/simple-java-app-image'
         TAG_NAME = 'v1.0.0'
-        GHCR_REGISTRY = 'ghcr.io'
+        GHCR_REGISTRY = 'https://ghcr.io'
         GHCR_USERNAME = credentials('ghcr-username')  
         GHCR_TOKEN = credentials('ghcr-token')     
     }
@@ -26,31 +26,30 @@ pipeline {
             }
         }
 
-        // stage('Login to GitHub Container Registry') {
-        //     steps {
-        //         script {
-        //             sh "docker login -u ${GHCR_USERNAME} -p ${GHCR_TOKEN} ${GHCR_REGISTRY}"
-        //         }
-        //     }
-        // }
+         stage('Login to GitHub Container Registry') {
+             steps {
+                script {
+                    echo ${GHCR_TOKEN} | docker login ${GHCR_REGISTRY}/ -u USERNAME --password-stdin 
+                }
+            }
+        }
 
-        // stage('Tag Docker Image') {
-        //     steps {
-        //         script {
-        //             // Tag the Docker image
-        //             sh "docker tag ${IMAGE_NAME}:latest ${GHCR_REGISTRY}/${IMAGE_NAME}:${TAG_NAME}-alpha"
+        stage('Tag Docker Image') {
+            steps {
+                script {
+                    sh "docker tag ${IMAGE_NAME}:latest ${GHCR_REGISTRY}/${IMAGE_NAME}:${TAG_NAME}-alpha"
 
-        //         }
-        //     }
-        // }
+                }
+            }
+        }
 
-        // stage('Push Docker Image to GH Container Registry') {
-        //     steps {
-        //         script {
-        //             sh "docker push ${GHCR_REGISTRY}/${IMAGE_NAME}:${TAG_NAME}-alpha"
-        //         }
-        //     }
-        // }
+        stage('Push Docker Image to GH Container Registry') {
+            steps {
+                script {
+                    sh "docker push ${GHCR_REGISTRY}/${IMAGE_NAME}:${TAG_NAME}-alpha"
+                }
+            }
+        }
             stage('Remove Previous Container'){
               steps {
                  script {
@@ -65,7 +64,7 @@ pipeline {
             stage('Docker deployment'){
              steps {
                  script {
-                       sh 'docker run -dit -p 8081:8080 --name simple-java-app ${IMAGE_NAME}:latest' 
+                       sh 'docker run -dit -p 8081:8080 --name simple-java-app ${GHCR_REGISTRY}/${IMAGE_NAME}:${TAG_NAME}-alpha' 
                    }
                 }
             }
