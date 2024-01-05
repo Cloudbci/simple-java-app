@@ -3,9 +3,7 @@ pipeline {
     environment {
         IMAGE_NAME = 'cloudbci/simple-java-app/simple-java-app-image'
         TAG_NAME = 'v1.0.0'
-        GHCR_REGISTRY = 'ghcr.io'
-        GHCR_USERNAME = credentials('ghcr-username')  
-        GHCR_TOKEN = credentials('ghcr-token')     
+        GHCR_REGISTRY = 'ghcr.io'   
     }
 
     stages {
@@ -18,45 +16,23 @@ pipeline {
             }
         }
 
-        // stage('Build Docker Image') {
-        //     steps {
-        //         script {
-        //             sh "docker build -f Dockerfile -t ${IMAGE_NAME}:latest ."
-        //         }
-        //     }
-        // }
-
-        stage('Build Docker Image and Login to GHCR') {
+        stage('Build Docker Image') {
             steps {
                 script {
-                    // Build the Docker image
                     sh "docker build -f Dockerfile -t ${IMAGE_NAME}:latest ."
-
-                    // Create a Docker configuration file with the GitHub Container Registry credentials
-                    def dockerConfigContent = """{
-                        "auths": {
-                            "${GHCR_REGISTRY}": {
-                                "username": "${GHCR_USERNAME}",
-                                "password": "${GHCR_TOKEN}"
-                            }
-                        }
-                    }"""
-                    writeFile file: '.docker/config.json', text: dockerConfigContent
-
-                    // Login to GitHub Container Registry using --password-stdin
-                    sh "cat .docker/config.json | docker login --username ${GHCR_USERNAME} --password-stdin ${GHCR_REGISTRY}"
                 }
             }
         }
 
-
-        //  stage('Login to GitHub Container Registry') {
-        //      steps {
-        //         script {
-        //             echo "${GHCR_TOKEN} | docker login https://${GHCR_REGISTRY} -u USERNAME --password-stdin"
-        //         }
-        //     }
-        // }
+         stage('Login to GitHub Container Registry') {
+             steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'GitHub-Token', usernameVariable: 'GHCR_USERNAME', passwordVariable: 'GHCR_TOKEN')]) {
+                    sh "docker login --username ${GHCR_USERNAME} --password-stdin ghcr.io"
+                    }
+                }
+            }
+         }
 
         stage('Tag Docker Image') {
             steps {
