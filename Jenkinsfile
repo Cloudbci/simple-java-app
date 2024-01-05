@@ -65,8 +65,9 @@ pipeline {
             stage('Docker deployment'){
              steps {
                  script {
-                       sh 'docker run -d -p 8081:8080 --name simple-java-app ${IMAGE_NAME}:latest' 
-                       sh 'curl http://localhost:8081'
+                       sh 'docker run -dit -p 8081:8080 -p 10080:80 --name simple-java-app ${IMAGE_NAME}:latest' 
+                     
+                       sh 'curl http://localhost:10080'
                    }
                 }
             }
