@@ -26,30 +26,37 @@ pipeline {
             }
         }
 
-        stage('Login to GitHub Container Registry') {
-            steps {
-                script {
-                    sh "docker login -u ${GHCR_USERNAME} -p ${GHCR_TOKEN} ${GHCR_REGISTRY}"
+        // stage('Login to GitHub Container Registry') {
+        //     steps {
+        //         script {
+        //             sh "docker login -u ${GHCR_USERNAME} -p ${GHCR_TOKEN} ${GHCR_REGISTRY}"
+        //         }
+        //     }
+        // }
+
+        // stage('Tag Docker Image') {
+        //     steps {
+        //         script {
+        //             // Tag the Docker image
+        //             sh "docker tag ${IMAGE_NAME}:latest ${GHCR_REGISTRY}/${IMAGE_NAME}:${TAG_NAME}-alpha"
+
+        //         }
+        //     }
+        // }
+
+        // stage('Push Docker Image to GH Container Registry') {
+        //     steps {
+        //         script {
+        //             sh "docker push ${GHCR_REGISTRY}/${IMAGE_NAME}:${TAG_NAME}-alpha"
+        //         }
+        //     }
+        // }
+            stage('Docker deployment'){
+             steps {
+                 script {
+                       sh 'docker run -d -p 8080:8080 --name tomcattest ${GHCR_REGISTRY}/${IMAGE_NAME}:${TAG_NAME}-alpha' 
+                   }
                 }
             }
-        }
-
-        stage('Tag Docker Image') {
-            steps {
-                script {
-                    // Tag the Docker image
-                    sh "docker tag ${IMAGE_NAME}:latest ${GHCR_REGISTRY}/${IMAGE_NAME}:${TAG_NAME}-alpha"
-
-                }
-            }
-        }
-
-        stage('Push Docker Image to GH Container Registry') {
-            steps {
-                script {
-                    sh "docker push ${GHCR_REGISTRY}/${IMAGE_NAME}:${TAG_NAME}-alpha"
-                }
-            }
-        }
     }
 }
