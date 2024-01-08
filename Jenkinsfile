@@ -12,7 +12,7 @@ pipeline {
         stage('Maven Package') {
             steps {
                 script{
-                    sh "mvn clean package"
+                    sh "mvn clean install"
                     sh 'mv target/myweb*.war target/newapp.war'
                 }
             }
