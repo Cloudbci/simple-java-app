@@ -1,7 +1,5 @@
 pipeline {
-    agent { 
-        label "linux" 
-    }
+    agent none
     environment {
         IMAGE_NAME = 'cloudbci/simple-java-app/simple-java-app-image'
         TAG_NAME = 'v1.0.0'
@@ -10,6 +8,9 @@ pipeline {
 
     stages {
         stage('Maven Package') {
+            agent {
+                docker { image 'maven:3.8.1-adoptopenjdk-11' }
+              }
             steps {
                 script{
                     sh "mvn clean install"
