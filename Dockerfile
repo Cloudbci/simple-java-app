@@ -1,4 +1,6 @@
 FROM ubuntu:16.04
-WORKDIR /home/cloudbci-agent1/
-RUN apk update && apk add -U git curl maven && rm -rf /var/cache/apk/*
+WORKDIR /home/cloudbci_agent1/
+RUN apt-get update && apt-get install -y git curl maven && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+
 
