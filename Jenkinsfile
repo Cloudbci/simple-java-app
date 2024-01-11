@@ -21,7 +21,9 @@ pipeline {
         }
 
         stage('Build Docker Image') {
-            agent any
+            agent {
+                dockerfile true
+              }
             steps {
                 script {
                     sh "docker build -f Dockerfile-app -t ${IMAGE_NAME}:latest ."
