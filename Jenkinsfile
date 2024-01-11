@@ -10,7 +10,7 @@ pipeline {
         stage('Maven Package') {
             agent {
                 //docker { image 'maven:3.8.1-adoptopenjdk-11' }
-                dockerfile true
+                dockerfile Dockerfile
               }
             steps {
                 script{
@@ -24,7 +24,7 @@ pipeline {
             agent any
             steps {
                 script {
-                    sh "docker build -f Dockerfile -t ${IMAGE_NAME}:latest ."
+                    sh "docker build -f Dockerfile-app -t ${IMAGE_NAME}:latest ."
                 }
             }
         }
