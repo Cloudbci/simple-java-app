@@ -9,29 +9,26 @@ pipeline {
     stages {
         stage('Maven Package') {
             agent {
-                //docker { image 'maven:3.8.1-adoptopenjdk-11' }
-                label 'ubuntu'
+                docker { image 'maven:3.8.1-adoptopenjdk-11' }
               }
             steps {
                 script{
-                    //sh "mvn clean install"
-                    //sh 'mv target/myweb*.war target/newapp.war'
-                    sh 'java --version'
-                    sh 'echo "Running in sharedagent1"'
+                    sh "mvn clean install"
+                    sh 'mv target/myweb*.war target/newapp.war'
                 }
             }
         }
 
-        // stage('Build Docker Image') {
-        //     agent {
-        //         dockerfile true
-        //       }
-        //     steps {
-        //         script {
-        //             sh "docker build -f Dockerfile-app -t ${IMAGE_NAME}:latest ."
-        //         }
-        //     }
-        // }
+        stage('Build Docker Image') {
+            agent {
+                label 'ubuntu'
+              }
+            steps {
+                script {
+                    sh "docker build -f Dockerfile-app -t ${IMAGE_NAME}:latest ."
+                }
+            }
+        }
 
         //  stage('Login to GitHub Container Registry') {
         //      agent any
