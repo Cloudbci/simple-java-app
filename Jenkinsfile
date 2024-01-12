@@ -10,7 +10,7 @@ pipeline {
         stage('Maven Package') {
             agent {
                 //docker { image 'maven:3.8.1-adoptopenjdk-11' }
-                label 'Shared-agent1'
+                label 'sharedagent1'
               }
             steps {
                 script{
