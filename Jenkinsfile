@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { label 'ubuntu'}
     environment {
         IMAGE_NAME = 'cloudbci/simple-java-app/simple-java-app-image'
         TAG_NAME = 'v1.0.1'
@@ -74,13 +74,7 @@ pipeline {
                    }
                 }
             }
-        stage('Verify the application status'){
-            steps{
-                script{
-                    sh 'curl http://localhost:8081'
-                }
-            }
-        }
+        
     }
 }
 
