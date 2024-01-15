@@ -74,7 +74,7 @@ pipeline {
                    }
                 }
             }
-        stage('Verify the application status'{
+        stage('Verify the application status'){
             steps{
                 script{
                     sh 'curl http://localhost:8081'
@@ -83,3 +83,6 @@ pipeline {
         }
     }
 }
+
+    
+
