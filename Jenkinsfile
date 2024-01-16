@@ -29,7 +29,7 @@ pipeline {
             steps {
                 script {
                     //sh "docker build -f Dockerfile-app -t ${IMAGE_NAME} ."
-                    sh "docker build -f Dockerfile-app -t simple-java-app-image:latest ."
+                    //sh "docker build -f Dockerfile-app -t simple-java-app-image:latest ."
 
                 }
             }
@@ -74,6 +74,7 @@ pipeline {
                 
                         // Push Docker image to Artifactory
                        // sh "jfrog rt docker-push ${IMAGE_NAME } ${ARTIFACTORY_REPO} --build-name='Simple-Java-App' --build-number=1"
+                         sh "docker build -f Dockerfile-app -t simple-java-app-image:latest ."
                         sh "jfrog rt docker-push simple-java-app-image:latest container-images --build-name=Simple-Java-App --build-number=1"
 
                     }
