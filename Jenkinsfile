@@ -68,7 +68,7 @@ pipeline {
                     withCredentials([string(credentialsId: 'JFROG-TOKEN', variable: 'ARTIFACTORY_ACCESS_TOKEN')]) {
                         // Log in to JFrog Artifactory with an access token
                         //sh "jfrog rt c Jfrog-artifactory --url=${ARTIFACTORY_URL} --access-token=${ARTIFACTORY_ACCESS_TOKEN}"
-                        sh "jfrog config add Jfrog-artifactory --artifactory-url=${ARTIFACTORY_URL}"
+                        //sh "jfrog config add Jfrog-artifactory --artifactory-url=${ARTIFACTORY_URL}"
                 
                         // Push Docker image to Artifactory
                         sh "jfrog rt docker-push ${DOCKER_IMAGE} ${ARTIFACTORY_REPO} --build-name='Simple-Java-App' --build-number=1"
