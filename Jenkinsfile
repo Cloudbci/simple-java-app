@@ -65,11 +65,12 @@ pipeline {
             stage('Push to Artifactory') {
             steps {
                 script {
-                   // Log in to JFrog Artifactory with an access token
-                    sh "jfrog config add artifactory-server --url=${ARTIFACTORY_URL} --access-token=${ARTIFACTORY_ACCESS_TOKEN}"
-
-                    // Push Docker image to Artifactory
-                    sh "jfrog rt docker-push ${DOCKER_IMAGE} ${ARTIFACTORY_REPO} --build-name='Simple-Java-App' --build-number=1"
+                    withCredentials([string(credentialsId: 'JFROG-TOKEN', variable: 'ARTIFACTORY_ACCESS_TOKEN')]) {
+                        // Log in to JFrog Artifactory with an access token
+                        sh "jfrog config add artifactory-server --url=${ARTIFACTORY_URL} --access-token=${ARTIFACTORY_ACCESS_TOKEN} --interactive=false"
+                        
+                        // Push Docker image to Artifactory
+                        sh "jfrog rt docker-push ${DOCKER_IMAGE} ${ARTIFACTORY_REPO} --build-name='Simple-Java-App' --build-number=1"
                 }
             }
         }
