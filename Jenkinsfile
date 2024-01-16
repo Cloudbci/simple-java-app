@@ -24,16 +24,16 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
-            //agent { label 'ubuntu' }            
-            steps {
-                script {
-                    //sh "docker build -f Dockerfile-app -t ${IMAGE_NAME} ."
-                    //sh "docker build -f Dockerfile-app -t simple-java-app-image:latest ."
+        // stage('Build Docker Image') {
+        //     //agent { label 'ubuntu' }            
+        //     steps {
+        //         script {
+        //             //sh "docker build -f Dockerfile-app -t ${IMAGE_NAME} ."
+        //             //sh "docker build -f Dockerfile-app -t simple-java-app-image:latest ."
 
-                }
-            }
-        }
+        //         }
+        //     }
+        // }
 
         //  stage('Login to GitHub Container Registry') {
         //      agent { label 'ubuntu' } 
