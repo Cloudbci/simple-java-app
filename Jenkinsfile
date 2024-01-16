@@ -28,7 +28,7 @@ pipeline {
             //agent { label 'ubuntu' }            
             steps {
                 script {
-                    sh "docker build -f Dockerfile-app -t ${IMAGE_NAME}:latest ."
+                    sh "docker build -f Dockerfile-app -t ${IMAGE_NAME}:${TAG_NAME} ."
                 }
             }
         }
@@ -69,7 +69,7 @@ pipeline {
                     sh "jfrog rt config --url=${ARTIFACTORY_URL} --access-token=${ARTIFACTORY_ACCESS_TOKEN} --interactive=false"
 
                     // Push Docker image to Artifactory
-                    sh "jfrog rt docker-push ${IMAGE_NAME} ${ARTIFACTORY_REPO} --build-name=your-build-name --build-number=1"
+                    sh "jfrog rt docker-push ${IMAGE_NAME}:${TAG_NAME} ${ARTIFACTORY_REPO} --build-name=${IMAGE_NAME} --build-number=1"
                 }
             }
         }
