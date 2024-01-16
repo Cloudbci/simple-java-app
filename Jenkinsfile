@@ -1,5 +1,6 @@
 pipeline {
-    agent { label 'ubuntu' }
+    //agent { label 'ubuntu' }
+    agent none
     environment {
         IMAGE_NAME = 'cloudbci/simple-java-app/simple-java-app-image'
         TAG_NAME = 'v1.0.1'
@@ -8,9 +9,9 @@ pipeline {
 
     stages {
         stage('Maven Package') {
-            // agent { 
-            //     image 'maven:3.8.4-adoptopenjdk-11'
-            //     }
+            agent { 
+                image 'maven:3.8.4-adoptopenjdk-11'
+                }
             
             steps {
                 script{
@@ -21,7 +22,7 @@ pipeline {
         }
 
         stage('Build Docker Image') {
-            // agent { label 'ubuntu' }            
+            agent { label 'ubuntu' }            
             steps {
                 script {
                     sh "docker build -f Dockerfile-app -t ${IMAGE_NAME}:latest ."
@@ -30,7 +31,7 @@ pipeline {
         }
 
          stage('Login to GitHub Container Registry') {
-             // agent { label 'ubuntu' } 
+             agent { label 'ubuntu' } 
              steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'GitHub-Token', usernameVariable: 'GHCR_USERNAME', passwordVariable: 'GHCR_TOKEN')]) {
@@ -40,7 +41,7 @@ pipeline {
          }
 
         stage('Tag Docker Image') {
-            // agent { label 'ubuntu' } 
+            agent { label 'ubuntu' } 
             steps {
                 script {
                     sh "docker tag ${IMAGE_NAME}:latest ${GHCR_REGISTRY}/${IMAGE_NAME}:${TAG_NAME}-alpha"
@@ -50,7 +51,7 @@ pipeline {
         }
 
         stage('Push Docker Image to GH Container Registry') {
-            // agent { label 'ubuntu' } 
+            agent { label 'ubuntu' } 
             steps {
                 script {
                     sh "docker push ${GHCR_REGISTRY}/${IMAGE_NAME}:${TAG_NAME}-alpha"
@@ -58,7 +59,7 @@ pipeline {
             }
         }
             stage('Remove Previous Container'){
-              // agent { label 'ubuntu' } 
+              agent { label 'ubuntu' } 
               steps {
                  script {
         	            try{
@@ -70,7 +71,7 @@ pipeline {
               }
             }
             stage('Docker deployment'){
-             // agent { label 'ubuntu' } 
+             agent { label 'ubuntu' } 
              steps {
                  script {
                        sh 'docker run -dit -p 8081:8080 --name simple-java-app ${GHCR_REGISTRY}/${IMAGE_NAME}:${TAG_NAME}-alpha' 
