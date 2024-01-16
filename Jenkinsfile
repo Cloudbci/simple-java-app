@@ -3,7 +3,7 @@ pipeline {
     //agent any
     environment {
         IMAGE_NAME = 'cloudbci/simple-java-app/simple-java-app-image'
-        TAG_NAME = 'v1.0.1'
+        TAG_NAME = 'v1.0.2'
         GHCR_REGISTRY = 'ghcr.io'   
         ARTIFACTORY_URL = 'https://joslin24.jfrog.io/artifactory/'
         ARTIFACTORY_ACCESS_TOKEN = credentials('JFROG-TOKEN')
