@@ -18,8 +18,8 @@ pipeline {
             
             steps {
                 script{
-                    sh "mvn clean install"
-                    sh 'mv target/myweb*.war target/newapp.war'
+                    sh "mvn clean package"
+                    //sh 'mv target/myweb*.war target/newapp.war'
                 }
             }
         }
