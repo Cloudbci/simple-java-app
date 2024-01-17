@@ -38,6 +38,7 @@ pipeline {
                         // Push Docker image to Artifactory
                        //sh "jfrog rt docker-push ${IMAGE_NAME} --url=${ARTIFACTORY_URL} --build-name=Simple-Java-App --build-number=1 --access-token=${ARTIFACTORY_ACCESS_TOKEN}"
 		       sh "jfrog rt docker-push  ${IMAGE_NAME} ${ARTIFACTORY_REPO}"
+		       sh "jfrog rt build-publish Simple-Java-App 1"
 			}
                   }
 	    	}
