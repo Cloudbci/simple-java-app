@@ -88,12 +88,12 @@ pipeline {
 
             //         }
             //       }
-                stage('Publish build info') {
-			        steps {
-				        jf 'rt build-publish'
+           //      stage('Publish build info') {
+			        // steps {
+				       //  jf 'rt build-publish'
 
-			            }
-		            }
+			        //     }
+		         //    }
                 
       
             // stage('Remove Previous Container'){
