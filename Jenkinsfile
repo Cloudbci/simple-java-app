@@ -90,7 +90,7 @@ pipeline {
             //       }
                 stage('Publish build info') {
 			        steps {
-				        jf 'rt build-publish'
+				        jfrog 'rt build-publish'
 			            }
 		            }
                 
