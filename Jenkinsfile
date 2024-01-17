@@ -61,13 +61,15 @@ pipeline {
 
             stage('Scan and push docker image') {
 			steps {
+			  script {
 				dir('joslin2024.jfrog.io/container-images-docker') {
 					// Scan Docker image for vulnerabilities
-					jf 'docker scan $IMAGE_NAME'
+					jfrog 'docker scan $IMAGE_NAME'
 
 					// Push image to Artifactory
-					jf 'docker push $IMAGE_NAME'
+					jfrog 'docker push $IMAGE_NAME'
 				}
+			  }
 			}
 		}
 
