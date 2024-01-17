@@ -31,6 +31,17 @@ pipeline {
             }
         }
 
+	stage('Push to Artifactory') {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'JFROG-TOKEN', variable: 'ARTIFACTORY_ACCESS_TOKEN')]) {               
+                        // Push Docker image to Artifactory
+                       sh "jfrog rt docker-push ${IMAGE_NAME} container-images-docker-local --build-name=Simple-Java-App --build-number=1 --access-token=${JFROG-TOKEN}"
+			}
+                  }
+	    	}
+	    }
+
         //  stage('Login to GitHub Container Registry') {
         //      steps {
         //         script {
@@ -74,29 +85,7 @@ pipeline {
 		// 		}
 		// 	  }
 		// 	}
-		// }
-
-            stage('Push to Artifactory') {
-            steps {
-                script {
-                    withCredentials([string(credentialsId: 'JFROG-TOKEN', variable: 'ARTIFACTORY_ACCESS_TOKEN')]) {
-                        // Log in to JFrog Artifactory with an access token
-                        //sh "jfrog config add Jfrog-artifactory1 --artifactory-url=${ARTIFACTORY_URL}"
-                
-                        // Push Docker image to Artifactory
-                       sh "jfrog rt docker-push ${IMAGE_NAME} container-images-docker-local --build-name=Simple-Java-App --build-number=1 --access-token=${JFROG-TOKEN}"
-
-                    }
-                  }
-	    }
-	    }
-           //      stage('Publish build info') {
-			        // steps {
-				       //  jf 'rt build-publish'
-
-			        //     }
-		         //    }
-                
+		// }                
       
             // stage('Remove Previous Container'){
             //   agent { label 'ubuntu' } 
