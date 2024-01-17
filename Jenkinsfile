@@ -91,8 +91,8 @@ pipeline {
 				        jf 'rt build-publish'
 			            }
 		            }
-                }
-         }
+                
+      
             // stage('Remove Previous Container'){
             //   agent { label 'ubuntu' } 
             //   steps {
