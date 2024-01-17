@@ -90,7 +90,7 @@ pipeline {
             //       }
                 stage('Publish build info') {
 			        steps {
-				        jfrog rtBuildPublish(buildName: 'my-build', buildNumber: '1')
+				        jf 'rt build-publish'
 
 			            }
 		            }
