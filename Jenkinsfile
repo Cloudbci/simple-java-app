@@ -37,11 +37,13 @@ pipeline {
 	stage('Push to Artifactory') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'jfrog-docker-registry', usernameVariable: 'JFROG_DOCKER_USERNAME', passwordVariable: 'JFROF_DOCKER_TOKEN')]) { 
+                    //withCredentials([string(credentialsId: 'jfrog-docker-registry', usernameVariable: 'JFROG_DOCKER_USERNAME', passwordVariable: 'JFROF_DOCKER_TOKEN')]) { 
 		    //withCredentials([dockerServerCredentials(credentialsId: 'jfrog-docker-registry', registryUrlVariable: 'DOCKER_REGISTRY')]) {
-   				 sh "echo ${JFROF_DOCKER_TOKEN} | docker login --username ${JFROG_DOCKER_USERNAME} --password-stdin ${DOCKER_REGISTRY}"
-    				 sh "docker tag ${IMAGE_NAME}:${TAG_NAME} ${ARTIFACTORY_REPO}/${IMAGE_NAME}:${TAG_NAME}"
-		                 sh "docker push ${ARTIFACTORY_REPO}/${IMAGE_NAME}:${TAG_NAME}"
+   				 //sh "echo ${JFROF_DOCKER_TOKEN} | docker login --username ${JFROG_DOCKER_USERNAME} --password-stdin ${DOCKER_REGISTRY}"
+				docker.withRegistry('https://joslin2024.jfrog.io', 'jfrog-docker-registry') {
+					docker.image("${IMAGE_NAME}:${TAG_NAME}").push()
+    				 //sh "docker tag ${IMAGE_NAME}:${TAG_NAME} ${ARTIFACTORY_REPO}/${IMAGE_NAME}:${TAG_NAME}"
+		                 //sh "docker push ${ARTIFACTORY_REPO}/${IMAGE_NAME}:${TAG_NAME}"
 				}
 
                         // Push Docker image to Artifactory
