@@ -4,8 +4,8 @@ pipeline {
 		jfrog 'jfrog'
 	}
     environment {
-        IMAGE_NAME = 'simple-java-app-image:v1.0.2'
-        //TAG_NAME = 'v1.0.2'
+        IMAGE_NAME = 'simple-java-app-image:1.0.2'
+        //TAG_NAME = '1.0.2'
         GHCR_REGISTRY = 'ghcr.io'   
         ARTIFACTORY_URL = 'https://joslin2024.jfrog.io/artifactory/container-images-docker-local'
         ARTIFACTORY_ACCESS_TOKEN = credentials('JFROG-TOKEN')
