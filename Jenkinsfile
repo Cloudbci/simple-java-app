@@ -22,14 +22,14 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {    
-            steps {
-                script {
-                    //sh "docker build -f Dockerfile-app -t ${IMAGE_NAME} ."
-                    docker.build("$IMAGE_NAME", '-f Dockerfile-app .')
-                }
-            }
-        }
+        // stage('Build Docker Image') {    
+        //     steps {
+        //         script {
+        //             //sh "docker build -f Dockerfile-app -t ${IMAGE_NAME} ."
+        //             docker.build("$IMAGE_NAME", '-f Dockerfile-app .')
+        //         }
+        //     }
+        // }
 
         //  stage('Login to GitHub Container Registry') {
         //      steps {
@@ -59,10 +59,13 @@ pipeline {
         //     }
         // }
 
-            stage('Scan and push docker image') {
+            stage('Build and Scan and push docker image') {
 			steps {
 			  script {
 				dir('joslin2024.jfrog.io/container-images-docker') {
+					//build docker image
+					docker.build("$IMAGE_NAME", '-f Dockerfile-app .')
+					
 					// Scan Docker image for vulnerabilities
 					jfrog 'docker scan $IMAGE_NAME'
 
