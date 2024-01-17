@@ -1,7 +1,7 @@
 pipeline {
     agent any
     tools {
-		jfrog 'jfrog-cli'
+		jfrog 'jfrog'
 	}
     environment {
         IMAGE_NAME = 'joslin2024.jfrog.io/docker-local/simple-java-app-image:v1.0.2'
