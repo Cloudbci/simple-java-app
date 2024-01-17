@@ -39,7 +39,7 @@ pipeline {
                 script {
                     withCredentials([string(credentialsId: 'jfrog-docker-registry', variable: 'ARTIFACTORY_ACCESS_TOKEN')]) { 
 		    //withCredentials([dockerServerCredentials(credentialsId: 'jfrog-docker-registry', registryUrlVariable: 'DOCKER_REGISTRY')]) {
-   				 sh "echo ${JFROG_DOCKER_REGISTRY} | docker login -u ${DOCKER_REGISTRY_USR} -p ${DOCKER_REGISTRY_PSW} ${DOCKER_REGISTRY}"
+   				 sh "echo ${JFROG_DOCKER_REGISTRY} | docker login --username ${DOCKER_REGISTRY_USR} --password-stdin ${DOCKER_REGISTRY}"
     				 sh "docker tag ${IMAGE_NAME}:${TAG_NAME} ${ARTIFACTORY_REPO}/${IMAGE_NAME}:${TAG_NAME}"
 		                 sh "docker push ${ARTIFACTORY_REPO}/${IMAGE_NAME}:${TAG_NAME}"
 				}
