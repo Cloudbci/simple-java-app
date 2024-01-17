@@ -22,14 +22,14 @@ pipeline {
             }
         }
 
-        // stage('Build Docker Image') {    
-        //     steps {
-        //         script {
-        //             //sh "docker build -f Dockerfile-app -t ${IMAGE_NAME} ."
-        //             docker.build("$IMAGE_NAME", '-f Dockerfile-app .')
-        //         }
-        //     }
-        // }
+        stage('Build Docker Image') {    
+            steps {
+                script {
+                    //sh "docker build -f Dockerfile-app -t ${IMAGE_NAME} ."
+                    docker.build("$IMAGE_NAME", '-f Dockerfile-app .')
+                }
+            }
+        }
 
         //  stage('Login to GitHub Container Registry') {
         //      steps {
@@ -59,38 +59,37 @@ pipeline {
         //     }
         // }
 
-            stage('Build and Scan and push docker image') {
-			steps {
-			  script {
-				dir('joslin2024.jfrog.io/container-images-docker') {
-					//build docker image
-					docker.build("$IMAGE_NAME", '-f Dockerfile-app .')
+  //           stage('Build and Scan and push docker image') {
+		// 	steps {
+		// 	  script {
+		// 		dir('joslin2024.jfrog.io/container-images-docker') {
+		// 			//build docker image
+		// 			docker.build("$IMAGE_NAME", '-f Dockerfile-app .')
 					
-					// Scan Docker image for vulnerabilities
-					jfrog 'docker scan $IMAGE_NAME'
+		// 			// Scan Docker image for vulnerabilities
+		// 			jfrog 'docker scan $IMAGE_NAME'
 
-					// Push image to Artifactory
-					jfrog 'docker push $IMAGE_NAME'
-				}
-			  }
-			}
-		}
+		// 			// Push image to Artifactory
+		// 			jfrog 'docker push $IMAGE_NAME'
+		// 		}
+		// 	  }
+		// 	}
+		// }
 
-            // stage('Push to Artifactory') {
-            // steps {
-            //     script {
-            //         withCredentials([string(credentialsId: 'JFROG-TOKEN', variable: 'ARTIFACTORY_ACCESS_TOKEN')]) {
-            //             // Log in to JFrog Artifactory with an access token
-            //             //sh "jfrog rt c Jfrog-artifactory --url=${ARTIFACTORY_URL} --access-token=${ARTIFACTORY_ACCESS_TOKEN}"
-            //             //sh "jfrog config add Jfrog-artifactory --artifactory-url=${ARTIFACTORY_URL}"
+            stage('Push to Artifactory') {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'JFROG-TOKEN', variable: 'ARTIFACTORY_ACCESS_TOKEN')]) {
+                        // Log in to JFrog Artifactory with an access token
+                        //sh "jfrog rt c Jfrog-artifactory --url=${ARTIFACTORY_URL} --access-token=${ARTIFACTORY_ACCESS_TOKEN}"
+                        sh "jfrog config add Jfrog-artifactory --artifactory-url=${ARTIFACTORY_URL}"
                 
-            //             // Push Docker image to Artifactory
-            //            // sh "jfrog rt docker-push ${IMAGE_NAME } ${ARTIFACTORY_REPO} --build-name='Simple-Java-App' --build-number=1"
-            //              sh "docker build -f Dockerfile-app -t simple-java-app-image:latest ."
-            //             sh "jfrog rt docker-push simple-java-app-image:latest container-images --build-name=Simple-Java-App --build-number=1"
+                        // Push Docker image to Artifactory
+                       // sh "jfrog rt docker-push ${IMAGE_NAME } ${ARTIFACTORY_REPO} --build-name='Simple-Java-App' --build-number=1"
+                        sh "jfrog rt docker-push ${$IMAGE_NAME} container-images-docker-local --build-name=Simple-Java-App --build-number=1"
 
-            //         }
-            //       }
+                    }
+                  }
            //      stage('Publish build info') {
 			        // steps {
 				       //  jf 'rt build-publish'
