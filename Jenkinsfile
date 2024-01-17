@@ -84,7 +84,7 @@ pipeline {
                         sh "jfrog config add Jfrog-artifactory --artifactory-url=${ARTIFACTORY_URL}"
                 
                         // Push Docker image to Artifactory
-                       sh "jfrog rt docker-push ${$IMAGE_NAME} container-images-docker-local --build-name=Simple-Java-App --build-number=1"
+                       sh "jfrog rt docker-push ${IMAGE_NAME} container-images-docker-local --build-name=Simple-Java-App --build-number=1"
 
                     }
                   }
