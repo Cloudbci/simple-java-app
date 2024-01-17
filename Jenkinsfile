@@ -4,12 +4,12 @@ pipeline {
 		jfrog 'jfrog'
 	}
     environment {
-        IMAGE_NAME = 'simple-java-app-image:1.0.2'
-        //TAG_NAME = '1.0.2'
+        IMAGE_NAME = 'simple-java-app-image'
+        TAG_NAME = '1.0.3'
         GHCR_REGISTRY = 'ghcr.io'   
         ARTIFACTORY_URL = 'https://joslin2024.jfrog.io/artifactory/'
         ARTIFACTORY_ACCESS_TOKEN = credentials('JFROG-TOKEN')
-        ARTIFACTORY_REPO = 'container-images-docker-local'
+        ARTIFACTORY_REPO = 'joslin2024.jfrog.io/container-images-docker'
     }
 
     stages {
@@ -26,7 +26,7 @@ pipeline {
             steps {
                 script {
                     //sh "docker build -f Dockerfile-app -t ${IMAGE_NAME} ."
-                    docker.build("$IMAGE_NAME", '-f Dockerfile-app .')
+                    docker.build("${IMAGE_NAME}:${TAG_NAME}", '-f Dockerfile-app .')
                 }
             }
         }
@@ -37,8 +37,10 @@ pipeline {
                     withCredentials([string(credentialsId: 'JFROG-TOKEN', variable: 'ARTIFACTORY_ACCESS_TOKEN')]) {               
                         // Push Docker image to Artifactory
                        //sh "jfrog rt docker-push ${IMAGE_NAME} --url=${ARTIFACTORY_URL} --build-name=Simple-Java-App --build-number=1 --access-token=${ARTIFACTORY_ACCESS_TOKEN}"
-		       sh "jfrog rt docker-push  ${IMAGE_NAME} ${ARTIFACTORY_REPO}"
-		       sh "jfrog rt build-publish Simple-Java-App 1"
+		       //sh "jfrog rt docker-push  ${IMAGE_NAME} ${ARTIFACTORY_REPO}"
+		       //sh "jfrog rt build-publish Simple-Java-App 1"
+		       sh "docker tag ${IMAGE_NAME}:${TAG_NAME} ${ARTIFACTORY_REPO}/${IMAGE_NAME}:${TAG_NAME}"
+		       sh "docker push ${ARTIFACTORY_REPO}/${IMAGE_NAME}:${TAG_NAME}"
 			}
                   }
 	    	}
