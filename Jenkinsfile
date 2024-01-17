@@ -1,8 +1,10 @@
 pipeline {
-    agent { label 'ubuntu' }
-    //agent any
+    agent any
+    tools {
+		jfrog 'jfrog-cli'
+	}
     environment {
-        IMAGE_NAME = 'simple-java-app-image'
+        IMAGE_NAME = 'joslin2024.jfrog.io/docker-local/simple-java-app-image:v1.0.2'
         //TAG_NAME = 'v1.0.2'
         GHCR_REGISTRY = 'ghcr.io'   
         ARTIFACTORY_URL = 'https://joslin24.jfrog.io/artifactory/'
@@ -11,32 +13,25 @@ pipeline {
     }
 
     stages {
-        stage('Maven Package') {
-            // agent { 
-            //     image 'maven:3.8.4-adoptopenjdk-11'
-            //     }
-            
+        stage('Maven Package') {           
             steps {
                 script{
                     sh "mvn clean package"
-                    //sh 'mv target/myweb*.war target/newapp.war'
+                    sh 'mv target/myweb*.war target/newapp.war'
                 }
             }
         }
 
-        // stage('Build Docker Image') {
-        //     //agent { label 'ubuntu' }            
-        //     steps {
-        //         script {
-        //             //sh "docker build -f Dockerfile-app -t ${IMAGE_NAME} ."
-        //             //sh "docker build -f Dockerfile-app -t simple-java-app-image:latest ."
-
-        //         }
-        //     }
-        // }
+        stage('Build Docker Image') {    
+            steps {
+                script {
+                    //sh "docker build -f Dockerfile-app -t ${IMAGE_NAME} ."
+                    docker.build("$IMAGE_NAME", '-f Dockerfile-app .')
+                }
+            }
+        }
 
         //  stage('Login to GitHub Container Registry') {
-        //      agent { label 'ubuntu' } 
         //      steps {
         //         script {
         //             withCredentials([usernamePassword(credentialsId: 'GitHub-Token', usernameVariable: 'GHCR_USERNAME', passwordVariable: 'GHCR_TOKEN')]) {
@@ -64,23 +59,40 @@ pipeline {
         //     }
         // }
 
-            stage('Push to Artifactory') {
-            steps {
-                script {
-                    withCredentials([string(credentialsId: 'JFROG-TOKEN', variable: 'ARTIFACTORY_ACCESS_TOKEN')]) {
-                        // Log in to JFrog Artifactory with an access token
-                        //sh "jfrog rt c Jfrog-artifactory --url=${ARTIFACTORY_URL} --access-token=${ARTIFACTORY_ACCESS_TOKEN}"
-                        //sh "jfrog config add Jfrog-artifactory --artifactory-url=${ARTIFACTORY_URL}"
-                
-                        // Push Docker image to Artifactory
-                       // sh "jfrog rt docker-push ${IMAGE_NAME } ${ARTIFACTORY_REPO} --build-name='Simple-Java-App' --build-number=1"
-                         sh "docker build -f Dockerfile-app -t simple-java-app-image:latest ."
-                        sh "jfrog rt docker-push simple-java-app-image:latest container-images --build-name=Simple-Java-App --build-number=1"
+            stage('Scan and push docker image') {
+			steps {
+				dir('https:///artifactory/api/docker/container-images-docker') {
+					// Scan Docker image for vulnerabilities
+					jf 'docker scan $IMAGE_NAME'
 
-                    }
-                  }
+					// Push image to Artifactory
+					jf 'docker push $IMAGE_NAME'
+				}
+			}
+		}
+
+            // stage('Push to Artifactory') {
+            // steps {
+            //     script {
+            //         withCredentials([string(credentialsId: 'JFROG-TOKEN', variable: 'ARTIFACTORY_ACCESS_TOKEN')]) {
+            //             // Log in to JFrog Artifactory with an access token
+            //             //sh "jfrog rt c Jfrog-artifactory --url=${ARTIFACTORY_URL} --access-token=${ARTIFACTORY_ACCESS_TOKEN}"
+            //             //sh "jfrog config add Jfrog-artifactory --artifactory-url=${ARTIFACTORY_URL}"
+                
+            //             // Push Docker image to Artifactory
+            //            // sh "jfrog rt docker-push ${IMAGE_NAME } ${ARTIFACTORY_REPO} --build-name='Simple-Java-App' --build-number=1"
+            //              sh "docker build -f Dockerfile-app -t simple-java-app-image:latest ."
+            //             sh "jfrog rt docker-push simple-java-app-image:latest container-images --build-name=Simple-Java-App --build-number=1"
+
+            //         }
+            //       }
+                stage('Publish build info') {
+			        steps {
+				        jf 'rt build-publish'
+			            }
+		            }
                 }
-            }
+         }
             // stage('Remove Previous Container'){
             //   agent { label 'ubuntu' } 
             //   steps {
