@@ -35,7 +35,8 @@ pipeline {
             steps {
                 script {
 		   withCredentials([usernamePassword(credentialsId: 'jfrog-docker-registry', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-    			sh "echo ${PASSWORD} | docker login -u ${USERNAME} --password-stdin ${ARTIFACTORY_URL}"
+    			//sh "echo ${PASSWORD} | docker login -u ${USERNAME} --password-stdin ${ARTIFACTORY_URL}"
+			sh "docker login -u ${USERNAME} -p ${PASSWORD} ${ARTIFACTORY_URL}"
 			sh "docker tag ${IMAGE_NAME}:${TAG_NAME} ${ARTIFACTORY_REPO}/${IMAGE_NAME}:${TAG_NAME}"
 		        sh "docker push ${ARTIFACTORY_REPO}/${IMAGE_NAME}:${TAG_NAME}"
 		     }		
