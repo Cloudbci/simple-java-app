@@ -9,7 +9,7 @@ pipeline {
         GHCR_REGISTRY = 'ghcr.io'   
         ARTIFACTORY_URL = 'https://joslin2024.jfrog.io/artifactory/'
         //ARTIFACTORY_ACCESS_TOKEN = credentials('JFROG-TOKEN')
-        ARTIFACTORY_REPO = 'joslin2024.jfrog.io/pipeline-iamges'
+        ARTIFACTORY_REPO = 'joslin2024.jfrog.io/container-images-docker-local'
 	DOCKER_REGISTRY = 'joslin2024.jfrog.io'
 	JFROG_DOCKER_REGISTRY = credentials('jfrog-docker-registry')
 
