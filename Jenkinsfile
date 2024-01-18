@@ -11,7 +11,7 @@ pipeline {
         //ARTIFACTORY_ACCESS_TOKEN = credentials('JFROG-TOKEN')
         ARTIFACTORY_REPO = 'joslin2024.jfrog.io/pipeline-iamges'
 	DOCKER_REGISTRY = 'joslin2024.jfrog.io'
-	//JFROG_DOCKER_REGISTRY = credentials('jfrog-docker-registry')
+	JFROG_DOCKER_REGISTRY = credentials('jfrog-docker-registry')
 
     }
 
@@ -38,8 +38,8 @@ pipeline {
             steps {
                 script {
                    docker.withRegistry('https://joslin2024.jfrog.io', 'jfrog-docker-registry') {
-			sh "docker login -uiydawin@gmail.com joslin2024.jfrog.io"
- 			sh "docker tag ${IMAGE_NAME}:${TAG_NAME} ${ARTIFACTORY_REPO}/${IMAGE_NAME}:${TAG_NAME}"
+			sh "echo ${JFROG_DOCKER_REGISTRY} | docker login -u iydawin@gmail.com --password-stdin https://joslin2024.jfrog.io"
+			sh "docker tag ${IMAGE_NAME}:${TAG_NAME} ${ARTIFACTORY_REPO}/${IMAGE_NAME}:${TAG_NAME}"
 		        sh "docker push ${ARTIFACTORY_REPO}/${IMAGE_NAME}:${TAG_NAME}"
 		     }		
                   }
