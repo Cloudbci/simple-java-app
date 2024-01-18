@@ -41,15 +41,7 @@ pipeline {
  			sh "docker tag ${IMAGE_NAME}:${TAG_NAME} ${ARTIFACTORY_REPO}/${IMAGE_NAME}:${TAG_NAME}"
 		        //sh "docker push ${ARTIFACTORY_REPO}/${IMAGE_NAME}:${TAG_NAME}"
 			docker.image("${IMAGE_NAME}:${TAG_NAME}").push()
-				}
-
-                        // Push Docker image to Artifactory
-                       //sh "jfrog rt docker-push ${IMAGE_NAME} --url=${ARTIFACTORY_URL} --build-name=Simple-Java-App --build-number=1 --access-token=${ARTIFACTORY_ACCESS_TOKEN}"
-		       //sh "jfrog rt docker-push  ${IMAGE_NAME} ${ARTIFACTORY_REPO}"
-		       //sh "jfrog rt build-publish Simple-Java-App 1"
-		       //sh "docker tag ${IMAGE_NAME}:${TAG_NAME} ${ARTIFACTORY_REPO}/${IMAGE_NAME}:${TAG_NAME}"
-		       //sh "docker push ${ARTIFACTORY_REPO}/${IMAGE_NAME}:${TAG_NAME}"
-		
+		     }		
                   }
 	    	}
 	    }
