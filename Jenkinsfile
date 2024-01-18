@@ -6,6 +6,11 @@ pipeline {
         GHCR_REGISTRY = 'ghcr.io'   
         ARTIFACTORY_URL = 'https://joslin2024.jfrog.io/'
         ARTIFACTORY_REPO = 'joslin2024.jfrog.io/container-images-docker-local'
+
+	QUAY_USERNAME = 'josliniyda_j'
+        QUAY_PASSWORD = 'gNcWSJrAV5FtTGF'
+        QUAY_REGISTRY = 'quay.io'
+        QUAY_REPO = 'cloudbeeci/simple-java-app'
     }
     stages {
         stage('Maven Package') {           
@@ -23,7 +28,7 @@ pipeline {
                 }
             }
         }
-	stage('Push to Artifactory') {
+	stage('Push to Jfrog-Artifactory') {
             steps {
                 script {
 		   withCredentials([usernamePassword(credentialsId: 'jfrog-docker-registry', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) 
@@ -35,6 +40,19 @@ pipeline {
                   }
 	    	}
 	    }
+
+	stage('Push to Quay.io') {
+            steps {
+                script {
+                    // Authenticate with Quay.io
+		    withCredentials([usernamePassword(credentialsId: 'jfrog-docker-registry', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) 
+                    docker.withRegistry("${QUAY_REGISTRY}", "${QUAY_USERNAME}", "${QUAY_PASSWORD}") {
+                        // Push the Docker image to Quay.io
+                        docker.image("your-image-name:${DOCKER_IMAGE_TAG}").push("${QUAY_REPO}:${DOCKER_IMAGE_TAG}")
+                    }
+                }
+            }
+        }
 
         //  stage('Login to GitHub Container Registry') {
         //      steps {
