@@ -37,8 +37,9 @@ pipeline {
 	stage('Push to Artifactory') {
             steps {
                 script {
-                   docker.withRegistry('https://joslin2024.jfrog.io', 'jfrog-docker-registry') {
-			sh "echo ${JFROG_DOCKER_REGISTRY} | docker login -u iydawin@gmail.com --password-stdin https://joslin2024.jfrog.io"
+                   //docker.withRegistry('https://joslin2024.jfrog.io', 'jfrog-docker-registry') {
+		   withCredentials([usernamePassword(credentialsId: 'jfrog-docker-registry', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+    			sh "echo \$PASSWORD | docker login -u \$USERNAME --password-stdin https://joslin2024.jfrog.io"
 			sh "docker tag ${IMAGE_NAME}:${TAG_NAME} ${ARTIFACTORY_REPO}/${IMAGE_NAME}:${TAG_NAME}"
 		        sh "docker push ${ARTIFACTORY_REPO}/${IMAGE_NAME}:${TAG_NAME}"
 		     }		
