@@ -46,7 +46,9 @@ pipeline {
                     // Authenticate with Quay.io
                     docker.withRegistry("${QUAY_REGISTRY}", "${QUAY_USERNAME}", "${QUAY_PASSWORD}") {
                         // Push the Docker image to Quay.io
-                        docker.image("your-image-name:${DOCKER_IMAGE_TAG}").push("${QUAY_REPO}:${DOCKER_IMAGE_TAG}")
+			sh "docker login -u ${QUAY_USERNAME} -p ${QUAY_PASSWORD} ${QUAY_REGISTRY}"
+			sh "docker tag ${DOCKER_IMAGE_TAG} ${QUAY_REPO}/${DOCKER_IMAGE_TAG}"
+		        sh "docker push ${DOCKER_IMAGE_TAG} ${QUAY_REPO}/${DOCKER_IMAGE_TAG}"
                     }
                 }
             }
