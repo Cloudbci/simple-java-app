@@ -38,9 +38,9 @@ pipeline {
             steps {
                 script {
                    docker.withRegistry('https://joslin2024.jfrog.io', 'jfrog-docker-registry') {
+			docker login -uiydawin@gmail.com joslin2024.jfrog.io
  			sh "docker tag ${IMAGE_NAME}:${TAG_NAME} ${ARTIFACTORY_REPO}/${IMAGE_NAME}:${TAG_NAME}"
-		        //sh "docker push ${ARTIFACTORY_REPO}/${IMAGE_NAME}:${TAG_NAME}"
-			docker.image("${IMAGE_NAME}:${TAG_NAME}").push()
+		        sh "docker push ${ARTIFACTORY_REPO}/${IMAGE_NAME}:${TAG_NAME}"
 		     }		
                   }
 	    	}
