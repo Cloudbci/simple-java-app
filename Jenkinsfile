@@ -1,8 +1,7 @@
 pipeline {
     agent any
     environment {
-        IMAGE_NAME = 'simple-java-app'
-        TAG_NAME = '1.0.0'
+        DOCKER_IMAGE_TAG = 'simple-java-app:1.0.0'
         GHCR_REGISTRY = 'ghcr.io'   
         ARTIFACTORY_URL = 'https://joslin2024.jfrog.io/'
         ARTIFACTORY_REPO = 'joslin2024.jfrog.io/container-images-docker-local'
@@ -24,7 +23,7 @@ pipeline {
         stage('Build Docker Image') {    
             steps {
                 script {
-                    sh "docker build -f Dockerfile-app -t ${IMAGE_NAME}:${TAG_NAME} ."
+                    sh "docker build -f Dockerfile-app -t ${DOCKER_IMAGE_TAG} ."
                 }
             }
         }
@@ -34,8 +33,8 @@ pipeline {
 		   withCredentials([usernamePassword(credentialsId: 'jfrog-docker-registry', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) 
 		     {
 			sh "docker login -u ${USERNAME} -p ${PASSWORD} ${ARTIFACTORY_URL}"
-			sh "docker tag ${IMAGE_NAME}:${TAG_NAME} ${ARTIFACTORY_REPO}/${IMAGE_NAME}:${TAG_NAME}"
-		        sh "docker push ${ARTIFACTORY_REPO}/${IMAGE_NAME}:${TAG_NAME}"
+			sh "docker tag ${DOCKER_IMAGE_TAG} ${ARTIFACTORY_REPO}/${DOCKER_IMAGE_TAG}"
+		        sh "docker push ${ARTIFACTORY_REPO}/${DOCKER_IMAGE_TAG}"
 		     }		
                   }
 	    	}
@@ -45,7 +44,6 @@ pipeline {
             steps {
                 script {
                     // Authenticate with Quay.io
-		    withCredentials([usernamePassword(credentialsId: 'jfrog-docker-registry', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) 
                     docker.withRegistry("${QUAY_REGISTRY}", "${QUAY_USERNAME}", "${QUAY_PASSWORD}") {
                         // Push the Docker image to Quay.io
                         docker.image("your-image-name:${DOCKER_IMAGE_TAG}").push("${QUAY_REPO}:${DOCKER_IMAGE_TAG}")
