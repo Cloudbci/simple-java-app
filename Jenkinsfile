@@ -4,8 +4,8 @@ pipeline {
 		jfrog 'jfrog'
 	}
     environment {
-        IMAGE_NAME = 'simple-java-app-image'
-        TAG_NAME = '1.0.3'
+        IMAGE_NAME = 'simple-java-app'
+        TAG_NAME = '1.0.0'
         GHCR_REGISTRY = 'ghcr.io'   
         ARTIFACTORY_URL = 'https://joslin2024.jfrog.io/'
         ARTIFACTORY_REPO = 'joslin2024.jfrog.io/container-images-docker-local'
@@ -35,7 +35,6 @@ pipeline {
             steps {
                 script {
 		   withCredentials([usernamePassword(credentialsId: 'jfrog-docker-registry', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-    			//sh "echo ${PASSWORD} | docker login -u ${USERNAME} --password-stdin ${ARTIFACTORY_URL}"
 			sh "docker login -u ${USERNAME} -p ${PASSWORD} ${ARTIFACTORY_URL}"
 			sh "docker tag ${IMAGE_NAME}:${TAG_NAME} ${ARTIFACTORY_REPO}/${IMAGE_NAME}:${TAG_NAME}"
 		        sh "docker push ${ARTIFACTORY_REPO}/${IMAGE_NAME}:${TAG_NAME}"
