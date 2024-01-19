@@ -27,6 +27,14 @@ pipeline {
                 }
             }
         }
+
+	stage('Scan with Clair') {
+            steps {
+                script {
+                   sh 'clair-scanner --ip 13.233.87.183 ${DOCKER_IMAGE_TAG}'
+                }
+            }
+        }
 	stage('Push to Jfrog-Artifactory') {
             steps {
                 script {
