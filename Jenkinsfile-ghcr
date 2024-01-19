@@ -53,7 +53,7 @@ pipeline {
                   try{
         	        sh 'docker rm -f simple-java-app'
         	         }catch(error){
-        	          do nothing if there is an exception
+        	          //do nothing if there is an exception
                            }
                      }
           	 }
