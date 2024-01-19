@@ -64,7 +64,7 @@ pipeline {
           }
 
          stage('Tag Docker Image') {
-             agent { label 'ubuntu' } 
+            
              steps {
                  script {
                      sh "docker tag ${IMAGE_NAME}:latest ${GHCR_REGISTRY}/${IMAGE_NAME}:${TAG_NAME}-alpha"
@@ -74,7 +74,7 @@ pipeline {
          }
 
          stage('Push Docker Image to GH Container Registry') {
-             agent { label 'ubuntu' } 
+            
              steps {
                  script {
                      sh "docker push ${GHCR_REGISTRY}/${IMAGE_NAME}:${TAG_NAME}-alpha"
