@@ -54,33 +54,33 @@ pipeline {
          //   }
         //}
 
-          stage('Login to GitHub Container Registry') {
-              steps {
-                 script {
-                     withCredentials([usernamePassword(credentialsId: 'GitHub-Token', usernameVariable: 'GHCR_USERNAME', passwordVariable: 'GHCR_TOKEN')]) {
-                     sh "echo ${GHCR_TOKEN} | docker login --username ${GHCR_USERNAME} --password-stdin ghcr.io" }
-                 }
-             }
-          }
+          //stage('Login to GitHub Container Registry') {
+            //  steps {
+             //    script {
+               //      withCredentials([usernamePassword(credentialsId: 'GitHub-Token', usernameVariable: 'GHCR_USERNAME', passwordVariable: 'GHCR_TOKEN')]) {
+                //     sh "echo ${GHCR_TOKEN} | docker login --username ${GHCR_USERNAME} --password-stdin ghcr.io" }
+                // }
+            // }
+          //}
 
-         stage('Tag Docker Image') {
+        // stage('Tag Docker Image') {
             
-             steps {
-                 script {
-                     sh "docker tag ${IMAGE_NAME}:latest ${GHCR_REGISTRY}/${IMAGE_NAME}:${TAG_NAME}-alpha"
+         //    steps {
+            //     script {
+                //     sh "docker tag ${IMAGE_NAME}:latest ${GHCR_REGISTRY}/${IMAGE_NAME}:${TAG_NAME}-alpha"
 
-                 }
-             }
-         }
+                // }
+            // }
+        // }
 
-         stage('Push Docker Image to GH Container Registry') {
+        // stage('Push Docker Image to GH Container Registry') {
             
-             steps {
-                 script {
-                     sh "docker push ${GHCR_REGISTRY}/${IMAGE_NAME}:${TAG_NAME}-alpha"
-                 }
-             }
-         }
+           //  steps {
+             //    script {
+                 //    sh "docker push ${GHCR_REGISTRY}/${IMAGE_NAME}:${TAG_NAME}-alpha"
+                 //}
+            // }
+        // }
 
   //           stage('Build and Scan and push docker image') {
 		// 	steps {
