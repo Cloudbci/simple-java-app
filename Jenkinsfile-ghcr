@@ -25,7 +25,7 @@ pipeline {
          stage('Login to GitHub Container Registry') {
               steps {
                  script {
-                     withCredentials([usernamePassword(credentialsId: 'MYGH-TOKEN', usernameVariable: 'GHCR_USERNAME', passwordVariable: 'MYGH-TOKEN')]) {
+                     withCredentials([usernamePassword(credentialsId: 'GH_PAT_TOKEN', usernameVariable: 'GHCR_USERNAME', passwordVariable: 'MYGH-TOKEN')]) {
                      sh "echo ${MYGH-TOKEN} | docker login --username ${GHCR_USERNAME} --password-stdin ghcr.io" }
 		     sh "docker tag ${DOCKER_IMAGE_TAG} ${GHCR_REGISTRY}/${DOCKER_IMAGE_TAG}-alpha"
      		     sh "docker push ${GHCR_REGISTRY}/${DOCKER_IMAGE_TAG}-alpha"
