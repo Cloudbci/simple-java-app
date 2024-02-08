@@ -2,7 +2,7 @@ pipeline {
 	agent any
     //agent { label 'ubuntu' }
     environment {
-        DOCKER_IMAGE_TAG = 'simple-java-app:1.0.0'
+        DOCKER_IMAGE_TAG = 'SimpleJavaAapp:1.0.0'
         GHCR_REGISTRY = 'ghcr.io'   
     }
     stages {
@@ -27,8 +27,8 @@ pipeline {
                  script {
                      withCredentials([usernamePassword(credentialsId: 'GH_PAT_TOKEN', usernameVariable: 'GHCR_USERNAME', passwordVariable: 'MYGH_TOKEN')]) {
                      sh "echo ${MYGH_TOKEN} | docker login --username ${GHCR_USERNAME} --password-stdin ghcr.io" }
-		     sh "docker tag ${DOCKER_IMAGE_TAG} ${GHCR_REGISTRY}/${DOCKER_IMAGE_TAG}-alpha"
-     		     sh "docker push ${GHCR_REGISTRY}/${DOCKER_IMAGE_TAG}-alpha"
+		     sh "docker tag ${DOCKER_IMAGE_TAG} ${GHCR_REGISTRY}/${DOCKER_IMAGE_TAG}_alpha"
+     		     sh "docker push ${GHCR_REGISTRY}/${DOCKER_IMAGE_TAG}_alpha"
                  }
              }
           }  
@@ -47,7 +47,7 @@ pipeline {
          stage('Docker deployment'){
           steps {
 	      script {
-                    sh 'docker run -dit -p 8081:8080 --name simple-java-app ${GHCR_REGISTRY}/${DOCKER_IMAGE_TAG}-alpha' 
+                    sh 'docker run -dit -p 8081:8080 --name simple-java-app ${GHCR_REGISTRY}/${DOCKER_IMAGE_TAG}_alpha' 
                 }
            }
          }
