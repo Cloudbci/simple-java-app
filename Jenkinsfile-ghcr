@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_IMAGE_NAME = 'simple-java-app'
 	TAG_NAME = 'V1.0.1'
-        GHCR_REGISTRY = 'ghcr.io'   
+        GHCR_REGISTRY = 'ghcr.io/cloudbci'   
     }
     stages {
         stage('Maven Package') {           
