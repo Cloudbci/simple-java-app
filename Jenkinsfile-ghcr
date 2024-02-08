@@ -2,7 +2,7 @@ pipeline {
 	agent any
     //agent { label 'ubuntu' }
     environment {
-        DOCKER_IMAGE_TAG = 'SimpleJavaAapp:1.0.0'
+        DOCKER_IMAGE_TAG = 'simple_java_app:1.0.0'
         GHCR_REGISTRY = 'ghcr.io'   
     }
     stages {
