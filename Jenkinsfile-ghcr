@@ -18,7 +18,7 @@ pipeline {
         stage('Build Docker Image') {    
             steps {
                 script {
-                    sh "docker build -f Dockerfile-app -t ${DOCKER_IMAGE_TAG} ."
+                    sh "docker build -f Dockerfile-app -t ${DOCKER_IMAGE_NAME} ."
                 }
             }
         }
@@ -28,8 +28,8 @@ pipeline {
                  script {
                      withCredentials([usernamePassword(credentialsId: 'GH_PAT_TOKEN', usernameVariable: 'GHCR_USERNAME', passwordVariable: 'MYGH_TOKEN')]) {
                      sh "echo ${MYGH_TOKEN} | docker login --username ${GHCR_USERNAME} --password-stdin ghcr.io" }
-		     sh "docker tag ${DOCKER_IMAGE_TAG} ${GHCR_REGISTRY}/${DOCKER_IMAGE_TAG}"
-     		     sh "docker push ${GHCR_REGISTRY}/${DOCKER_IMAGE_TAG}"
+		     sh "docker tag ${DOCKER_IMAGE_NAME} ${GHCR_REGISTRY}/${DOCKER_IMAGE_NAME}:${TAG_NAME}"
+     		     sh "docker push ${GHCR_REGISTRY}/${DOCKER_IMAGE_NAME}:${TAG_NAME}"
                  }
              }
           }  
@@ -48,7 +48,7 @@ pipeline {
          stage('Docker deployment'){
           steps {
 	      script {
-                    sh 'docker run -dit -p 8081:8080 --name simple-java-app ${GHCR_REGISTRY}/${DOCKER_IMAGE_TAG}' 
+                    sh 'docker run -dit -p 8081:8080 --name simple-java-app ${GHCR_REGISTRY}/${DOCKER_IMAGE_NAME}:${TAG_NAME}' 
                 }
            }
          }
