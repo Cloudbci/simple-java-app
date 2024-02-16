@@ -34,7 +34,37 @@ pipeline {
              }
           }
 	}
-      
+	stages {
+        stage('Check Docker Image Vulnerabilities') {
+            steps {
+                script {
+                    // Get image digest
+                    def imageDigest = sh(script: "skopeo inspect docker://quay.io/${env.IMAGE_NAME}:${env.IMAGE_TAG} | jq -r .Digest", returnStdout: true).trim()
+
+                    // Download vulnerability report JSON
+                    sh "curl -o ${basename(env.IMAGE_NAME)}.json https://quay.io/api/v1/repository/${env.IMAGE_NAME}/manifest/${imageDigest}/security?vulnerabilities=true"
+
+                    // Check vulnerabilities and take action
+                    def highSeverityVulnerabilities = sh(script: "jq '.data.Layer.Features[] | select(.Vulnerabilities[]?.Severity == \"High\")' ${basename(env.IMAGE_NAME)}.json", returnStatus: true)
+
+                    if (highSeverityVulnerabilities == 0) {
+                        echo "No high severity vulnerabilities found. Continuing to deployment stage."
+                    } else {
+                        echo "High severity vulnerabilities found. Deleting the image from the quay.io repository and stopping the pipeline."
+                        // Delete the image from quay.io repository
+                        sh "skopeo delete docker://quay.io/${env.IMAGE_NAME}:${env.IMAGE_TAG}"
+                        // Stop the pipeline
+                        error "High severity vulnerabilities found. Pipeline stopped."
+                    }
+                }
+            }
+        }
+
+        stage('Deploy') {
+            // Add deployment steps here
+        }
     }
 }
 
+      
+    
