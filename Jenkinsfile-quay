@@ -44,7 +44,7 @@ pipeline {
                     sh "curl -o `basename $IMAGE_NAME`.json https://quay.io/api/v1/repository/${IMAGE_NAME}/manifest/${imageDigest}/security?vulnerabilities=true"
 
                     // Check vulnerabilities and take action
-                    def highSeverityVulnerabilities = sh(script: "jq '.data.Layer.Features[] | select(.Vulnerabilities[]?.Severity == \"Medium\")' `basename $IMAGE_NAME`.json", returnStatus: true)
+                    def highSeverityVulnerabilities = sh(script: "jq '.data.Layer.Features[] | select(.Vulnerabilities[]?.Severity == \"High\")' `basename $IMAGE_NAME`.json", returnStatus: true)
 
                     if (highSeverityVulnerabilities == 0) {
                         echo "No high severity vulnerabilities found. Continuing to deployment stage."
