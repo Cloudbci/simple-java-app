@@ -47,16 +47,17 @@ pipeline {
                     sh "curl -o `basename ${IMAGE_NAME}`.json https://quay.io/api/v1/repository/${IMAGE_NAME}/manifest/${imageDigest}/security?vulnerabilities=true"
 
                     // Check vulnerabilities and take action
-                    def highSeverityVulnerabilities = sh(script: "jq '.data.Layer.Features[] | select(.Vulnerabilities[]?.Severity == \"High\")' `basename ${IMAGE_NAME}`.json", returnStatus: true)
-
-                    if (highSeverityVulnerabilities) {
-			echo "High severity vulnerabilities found. Deleting the image from the quay.io repository and stopping the pipeline."
-                    } else {
-                        echo "No high severity vulnerabilities found. Continuing to deployment stage."
-                        // Delete the image from quay.io repository
+                   // def highSeverityVulnerabilities = sh(script: "jq '.data.Layer.Features[] | select(.Vulnerabilities[]?.Severity == \"High\")' `basename ${IMAGE_NAME}`.json", returnStatus: true)
+		      def mediumVulnerabilities = sh(script: "jq '.data.Layer.Features[]' `basename ${IMAGE_NAME}`.json | jq -c '{\"Name\":.Name,\"Version\":.Version,\"Advisory\":.Vulnerabilities[]} | select(.Advisory.Severity==\"Medium\") | {\"Advisory\":.Advisory.Name,\"Link\":.Advisory.Link,\"PACKAGE\":.Name,\"CURRENT VERSION\":.Version,\"FIXED IN VERSION\":.Advisory.FixedBy }'", returnStdout: true).trim()
+                    if (mediumVulnerabilities) {
+			echo "Medium vulnerabilities found. Deleting the image from the quay.io repository and stopping the pipeline."
+			echo "$mediumVulnerabilities"
+			// Delete the image from quay.io repository
                         sh "skopeo delete docker://${QUAY_REGISTRY}:${TAG_NAME}"
                         // Stop the pipeline
                         //error "High severity vulnerabilities found. Pipeline stopped."
+                    } else {
+                        echo "No high severity vulnerabilities found. Continuing to deployment stage."
                     }
                 }
             }
