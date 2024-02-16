@@ -46,7 +46,7 @@ pipeline {
                     def reportStatus = 'queued'
 
                     // Loop until the vulnerability scanning process is complete
-                    while (reportStatus == 'queued') {
+                    while (reportStatus != 'scanned') {
                         // Download vulnerability report JSON
                         sh "curl -o `basename ${IMAGE_NAME}`.json https://quay.io/api/v1/repository/${IMAGE_NAME}/manifest/${imageDigest}/security?vulnerabilities=true"
 
