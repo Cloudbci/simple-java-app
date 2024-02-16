@@ -2,7 +2,7 @@ pipeline {
 	agent any
     //agent { label 'ubuntu' }
     environment {
-        DOCKER_IMAGE_NAME = 'simple-java-app'
+        IMAGE_NAME = 'simple-java-app'
 	      TAG_NAME = 'V1.0.1'
         QUAY_REGISTRY = 'quay.io/cloudbeeci/simple-java-app'   
     }
@@ -18,7 +18,7 @@ pipeline {
         stage('Build Docker Image') {    
             steps {
                 script {
-                    sh "docker build -f Dockerfile-app -t ${DOCKER_IMAGE_NAME} ."
+                    sh "docker build -f Dockerfile-app -t ${IMAGE_NAME} ."
                 }
             }
         }
@@ -28,7 +28,7 @@ pipeline {
                  script {
                      withCredentials([usernamePassword(credentialsId: 'QuayRepo', usernameVariable: 'QUAY_USERNAME', passwordVariable: 'QUAY_PASSWORD')]) {
                    	sh "echo ${QUAY_PASSWORD} | docker login --username ${QUAY_USERNAME} --password-stdin quay.io" } 
-			sh "docker tag ${DOCKER_IMAGE_NAME} ${QUAY_REGISTRY}:${TAG_NAME}"
+			sh "docker tag ${IMAGE_NAME} ${QUAY_REGISTRY}:${TAG_NAME}"
 			sh "docker push ${QUAY_REGISTRY}:${TAG_NAME}"
                  }
              }
