@@ -49,10 +49,10 @@ pipeline {
                     // Check vulnerabilities and take action
                     def highSeverityVulnerabilities = sh(script: "jq '.data.Layer.Features[] | select(.Vulnerabilities[]?.Severity == \"High\")' `basename ${IMAGE_NAME}`.json", returnStatus: true)
 
-                    if (highSeverityVulnerabilities == 0) {
-                        echo "No high severity vulnerabilities found. Continuing to deployment stage."
+                    if (highSeverityVulnerabilities) {
+			echo "High severity vulnerabilities found. Deleting the image from the quay.io repository and stopping the pipeline."
                     } else {
-                        echo "High severity vulnerabilities found. Deleting the image from the quay.io repository and stopping the pipeline."
+                        echo "No high severity vulnerabilities found. Continuing to deployment stage."
                         // Delete the image from quay.io repository
                         sh "skopeo delete docker://${QUAY_REGISTRY}:${TAG_NAME}"
                         // Stop the pipeline
