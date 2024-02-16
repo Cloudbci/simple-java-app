@@ -2,7 +2,7 @@ pipeline {
 	agent any
     //agent { label 'ubuntu' }
     environment {
-        IMAGE_NAME = 'cloudbeeci/simple-java-app'
+        IMAGE_NAME = 'simple-java-app'
 	      TAG_NAME = 'V1.0.1'
         QUAY_REGISTRY = 'quay.io/cloudbeeci/simple-java-app'   
     }
