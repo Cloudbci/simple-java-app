@@ -33,7 +33,7 @@ pipeline {
                  }
              }
           }
-	}
+	
         stage('Check Docker Image Vulnerabilities') {
             steps {
                 script {
@@ -60,7 +60,7 @@ pipeline {
 	}
               
     }
-
+}
 
       
     
