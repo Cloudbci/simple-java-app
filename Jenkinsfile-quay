@@ -1,39 +1,42 @@
 pipeline {
-	agent any
-    //agent { label 'ubuntu' }
+    agent any
+
     environment {
         IMAGE_NAME = 'cloudbeeci/simple-java-app'
-	      TAG_NAME = 'V1.0.1'
-        QUAY_REGISTRY = 'quay.io/cloudbeeci/simple-java-app'   
+        TAG_NAME = 'V1.0.1'
+        QUAY_REGISTRY = 'quay.io/cloudbeeci/simple-java-app'
     }
+
     stages {
-        stage('Maven Package') {           
+        stage('Maven Package') {
             steps {
-                script{
+                script {
                     sh "mvn clean package"
                     sh 'mv target/myweb*.war target/newapp.war'
                 }
             }
         }
-        stage('Build Docker Image') {    
+
+        stage('Build Docker Image') {
             steps {
                 script {
-                    sh "docker build -f Dockerfile-app -t ${IMAGE_NAME} ."
+                    sh "docker build -f Dockerfile-app -t ${IMAGE_NAME}:${TAG_NAME} ."
                 }
             }
         }
-	
-         stage('Login to Quay.io Repository') {
-              steps {
-                 script {
-                     withCredentials([usernamePassword(credentialsId: 'QuayRepo', usernameVariable: 'QUAY_USERNAME', passwordVariable: 'QUAY_PASSWORD')]) {
-                   	sh "echo ${QUAY_PASSWORD} | docker login --username ${QUAY_USERNAME} --password-stdin quay.io" } 
-			sh "docker tag ${IMAGE_NAME} ${QUAY_REGISTRY}:${TAG_NAME}"
-			sh "docker push ${QUAY_REGISTRY}:${TAG_NAME}"
-                 }
-             }
-          }
-	
+
+        stage('Login to Quay.io Repository') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'QuayRepo', usernameVariable: 'QUAY_USERNAME', passwordVariable: 'QUAY_PASSWORD')]) {
+                        sh "echo ${QUAY_PASSWORD} | docker login --username ${QUAY_USERNAME} --password-stdin quay.io"
+                    }
+		    sh "docker tag ${IMAGE_NAME}:${TAG_NAME} ${QUAY_REGISTRY}:${TAG_NAME}"
+                    sh "docker push ${QUAY_REGISTRY}:${TAG_NAME}"
+                }
+            }
+        }
+
         stage('Check Docker Image Vulnerabilities') {
             steps {
                 script {
@@ -41,26 +44,22 @@ pipeline {
                     def imageDigest = sh(script: "skopeo inspect docker://${QUAY_REGISTRY}:${TAG_NAME} | jq -r .Digest", returnStdout: true).trim()
 
                     // Download vulnerability report JSON
-                    sh "curl -o `basename $IMAGE_NAME`.json https://quay.io/api/v1/repository/${IMAGE_NAME}/manifest/${imageDigest}/security?vulnerabilities=true"
+                    sh "curl -o ${IMAGE_NAME}_${TAG_NAME}_vulns.json https://quay.io/api/v1/repository/${IMAGE_NAME}/manifest/${imageDigest}/security?vulnerabilities=true"
 
                     // Check vulnerabilities and take action
-                    def highSeverityVulnerabilities = sh(script: "jq '.data.Layer.Features[] | select(.Vulnerabilities[]?.Severity == \"High\")' `basename $IMAGE_NAME`.json", returnStatus: true)
+                    def highSeverityVulnerabilities = sh(script: "jq '.data.Layer.Features[] | select(.Vulnerabilities[]?.Severity == \"High\")' ${IMAGE_NAME}_${TAG_NAME}_vulns.json", returnStatus: true)
 
                     if (highSeverityVulnerabilities == 0) {
                         echo "No high severity vulnerabilities found. Continuing to deployment stage."
                     } else {
                         echo "High severity vulnerabilities found. Deleting the image from the quay.io repository and stopping the pipeline."
                         // Delete the image from quay.io repository
-                        sh "skopeo delete docker://quay.io/${IMAGE_NAME}:${TAG_NAME}"
+                        sh "skopeo delete docker://${QUAY_REGISTRY}:${TAG_NAME}"
                         // Stop the pipeline
                         error "High severity vulnerabilities found. Pipeline stopped."
                     }
                 }
             }
-	}
-              
+        }
     }
 }
-
-      
-    
