@@ -32,7 +32,9 @@ pipeline {
      		     //sh "docker push ${QUAY_REGISTRY}:${TAG_NAME}"
 			 docker.withRegistry('https://quay.io', 'QuayRepo') {
                          sh 'docker login --username $QUAY_USERNAME --password-stdin quay.io'
-
+			}
+			sh "docker tag ${DOCKER_IMAGE_NAME} ${QUAY_REGISTRY}:${TAG_NAME}"
+			sh "docker push ${QUAY_REGISTRY}:${TAG_NAME}"
                  }
              }
           }  
