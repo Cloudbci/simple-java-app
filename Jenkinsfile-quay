@@ -42,9 +42,20 @@ pipeline {
                 script {
                     // Get image digest
                     def imageDigest = sh(script: "skopeo inspect docker://${QUAY_REGISTRY}:${TAG_NAME} | jq -r .Digest", returnStdout: true).trim()
-		    sh "echo $imageDigest"
-                    // Download vulnerability report JSON
-                    sh "curl -o `basename ${IMAGE_NAME}`.json https://quay.io/api/v1/repository/${IMAGE_NAME}/manifest/${imageDigest}/security?vulnerabilities=true"
+		    // Initialize variables
+                    def reportStatus = 'queued'
+
+                    // Loop until the vulnerability scanning process is complete
+                    while (reportStatus == 'queued') {
+                        // Download vulnerability report JSON
+                        sh "curl -o `basename ${IMAGE_NAME}`.json https://quay.io/api/v1/repository/${IMAGE_NAME}/manifest/${imageDigest}/security?vulnerabilities=true"
+
+                        // Check the status from the downloaded JSON
+                        reportStatus = sh(script: "jq -r .status `basename ${IMAGE_NAME}`.json", returnStdout: true).trim()
+
+                        // Wait for a specific duration before checking again
+                        sleep 60  // Adjust the duration as needed
+                    }
 
                     // Check vulnerabilities and take action
                    // def highSeverityVulnerabilities = sh(script: "jq '.data.Layer.Features[] | select(.Vulnerabilities[]?.Severity == \"High\")' `basename ${IMAGE_NAME}`.json", returnStatus: true)
