@@ -58,11 +58,10 @@ pipeline {
                     }
 
                     // Check vulnerabilities and take action
-                   // def highSeverityVulnerabilities = sh(script: "jq '.data.Layer.Features[] | select(.Vulnerabilities[]?.Severity == \"High\")' `basename ${IMAGE_NAME}`.json", returnStatus: true)
-		      def mediumVulnerabilities = sh(script: "jq '.data.Layer.Features[]' `basename ${IMAGE_NAME}`.json | jq -c '{\"Name\":.Name,\"Version\":.Version,\"Advisory\":.Vulnerabilities[]} | select(.Advisory.Severity==\"Medium\") | {\"Advisory\":.Advisory.Name,\"Link\":.Advisory.Link,\"PACKAGE\":.Name,\"CURRENT VERSION\":.Version,\"FIXED IN VERSION\":.Advisory.FixedBy }'", returnStdout: true).trim()
-                    if (mediumVulnerabilities) {
-			echo "Medium vulnerabilities found. Deleting the image from the quay.io repository and stopping the pipeline."
-			echo "$mediumVulnerabilities"
+                     def HighVulnerabilities = sh(script: "jq '.data.Layer.Features[]' `basename ${IMAGE_NAME}`.json | jq -c '{\"Name\":.Name,\"Version\":.Version,\"Advisory\":.Vulnerabilities[]} | select(.Advisory.Severity==\"High\") | {\"Advisory\":.Advisory.Name,\"Link\":.Advisory.Link,\"PACKAGE\":.Name,\"CURRENT VERSION\":.Version,\"FIXED IN VERSION\":.Advisory.FixedBy }'", returnStdout: true).trim()
+                    if (HighVulnerabilities) {
+			echo "High Vulnerabilities found. Deleting the image from the quay.io repository and stopping the pipeline."
+			echo "$HighVulnerabilities"
 			// Delete the image from quay.io repository
                         sh "skopeo delete docker://${QUAY_REGISTRY}:${TAG_NAME}"
                         // Stop the pipeline
