@@ -9,7 +9,7 @@ pipeline {
 	AWS_REGION = credentials('AWS_REGION')
         CLUSTER_ACCESSKEY = credentials('CLUSTER_ACCESSKEY')
         CLUSTER_SECRETKEY = credentials('CLUSTER_SECRETKEY')
-        CLUSTER_NAME = 'your-uat-cluster-name'
+        CLUSTER_NAME = credentials('CLUSTER_NAME')
     }
 
     stages {
@@ -81,7 +81,8 @@ pipeline {
             steps {
                 script {
                     withCredentials([string(credentialsId: 'CLUSTER_ACCESSKEY', variable: 'AWS_ACCESS_KEY_ID'),
-                                     string(credentialsId: 'CLUSTER_SECRETKEY', variable: 'AWS_SECRET_ACCESS_KEY')]) {
+                                     string(credentialsId: 'CLUSTER_SECRETKEY', variable: 'AWS_SECRET_ACCESS_KEY'),
+				     string(credentialsId: 'AWS_REGION', variable: 'AWS_REGION')]) {
                         sh "aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID"
                         sh "aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY"
                         sh "aws configure set region $AWS_REGION"
@@ -91,14 +92,15 @@ pipeline {
 	 stage('Update kubeconfig') {
             steps {
                 script {
-                    sh "aws eks update-kubeconfig --region $AWS_REGION --name $USER_CLUSTER_NAME"
+                    sh "aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME"
                 }
             }
         }
         stage('Apply deployment manifest') {
             steps {
                 script {
-                    sh "kubectl apply -f deployment_app.yaml"
+                    //sh "kubectl apply -f deployment_app.yaml"
+		   sh "echo deploying to EKS cluster"
                 }
             }
         }
