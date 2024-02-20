@@ -5,6 +5,7 @@ pipeline {
         IMAGE_NAME = 'cloudbeeci/simple-java-app'
         TAG_NAME = 'V1.0.1'
         QUAY_REGISTRY = 'quay.io/cloudbeeci/simple-java-app'
+	K8S_NAMESPACE = 'your_namespace'
     }
 
     stages {
@@ -72,5 +73,20 @@ pipeline {
                 }
             }
         }
+	stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    // Set kubectl context if needed
+                    sh "kubectl config use-context <your context>"
+
+                    // Apply Kubernetes deployment
+                    sh "kubectl apply -f kubernetes/deployment.yaml -n ${K8S_NAMESPACE}"
+
+                    // Apply Kubernetes service (if needed)
+                    sh "kubectl apply -f kubernetes/service.yaml -n ${K8S_NAMESPACE}"
+                }
+            }
+        }
+
     }
 }
