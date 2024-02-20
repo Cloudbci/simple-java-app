@@ -19,6 +19,23 @@ spec:
         image: quay.io/cloudbeeci/simple-java-app:latest
         imagePullPolicy: Always
         ports:
-        - containerPort: 8085
+        - containerPort: 8080
      imagePullSecrets:
       - name: quaycred
+---          
+ 
+apiVersion: v1
+kind: Service
+metadata:
+  name: simple-java-app
+  namespace: cloudbeesci-java-app
+spec: 
+  selector:
+   name: java-app
+  ports:
+   - name: http
+     port: 8080
+     targetPort: 8080
+# For Expose
+  type: NodePort
+  
