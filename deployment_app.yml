@@ -21,7 +21,7 @@ spec:
         ports:
         - containerPort: 8080
      imagePullSecrets:
-      - name: quaycred
+      - name: quay-registry-secret
 ---          
  
 apiVersion: v1
