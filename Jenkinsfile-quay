@@ -89,6 +89,7 @@ pipeline {
                     }
                 }
             }
+	}
 	 stage('Update kubeconfig') {
             steps {
                 script {
