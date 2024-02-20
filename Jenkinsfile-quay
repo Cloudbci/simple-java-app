@@ -6,6 +6,10 @@ pipeline {
         TAG_NAME = 'V1.0.1'
         QUAY_REGISTRY = 'quay.io/cloudbeeci/simple-java-app'
 	K8S_NAMESPACE = 'your_namespace'
+	AWS_REGION = credentials('AWS_REGION')
+        CLUSTER_ACCESSKEY = credentials('CLUSTER_ACCESSKEY')
+        CLUSTER_SECRETKEY = credentials('CLUSTER_SECRETKEY')
+        CLUSTER_NAME = 'your-uat-cluster-name'
     }
 
     stages {
