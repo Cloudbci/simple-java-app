@@ -82,8 +82,9 @@ pipeline {
                     // Apply Kubernetes deployment
                     sh "kubectl apply -f kubernetes/deployment.yaml -n ${K8S_NAMESPACE}"
 
-                    // Apply Kubernetes service (if needed)
-                    sh "kubectl apply -f kubernetes/service.yaml -n ${K8S_NAMESPACE}"
+                    // Apply Kubectl commands to check status of deployment
+                    sh "kubectl get pods"
+		    sh "kubectl describe pods"
                 }
             }
         }
