@@ -77,21 +77,40 @@ pipeline {
                 }
             }
         }
-	stage('Deploy to Kubernetes') {
+	stage('Configure AWS credentials') {
             steps {
                 script {
-                    // Set kubectl context if needed
-                    sh "kubectl config use-context <your context>"
-
-                    // Apply Kubernetes deployment
-                    sh "kubectl apply -f kubernetes/deployment.yaml -n ${K8S_NAMESPACE}"
-
-                    // Apply Kubectl commands to check status of deployment
-                    sh "kubectl get pods"
-		    sh "kubectl describe pods"
+                    withCredentials([string(credentialsId: 'CLUSTER_ACCESSKEY', variable: 'AWS_ACCESS_KEY_ID'),
+                                     string(credentialsId: 'CLUSTER_SECRETKEY', variable: 'AWS_SECRET_ACCESS_KEY')]) {
+                        sh "aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID"
+                        sh "aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY"
+                        sh "aws configure set region $AWS_REGION"
+                    }
+                }
+            }
+	 stage('Update kubeconfig') {
+            steps {
+                script {
+                    sh "aws eks update-kubeconfig --region $AWS_REGION --name $USER_CLUSTER_NAME"
                 }
             }
         }
-
+        stage('Apply deployment manifest') {
+            steps {
+                script {
+                    sh "kubectl apply -f deployment_app.yaml"
+                }
+            }
+        }
+	stage('Check deployment status') {
+            steps {
+                script {
+                    sh "kubectl get deployments"
+                    sh "kubectl get pods"
+                    sh "kubectl get services"
+                    sh "kubectl describe pods"
+                }
+            }
+        }
     }
 }
