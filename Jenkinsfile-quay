@@ -90,13 +90,13 @@ pipeline {
                 }
             }
 	}
-	 stage('Update kubeconfig') {
-            steps {
-                script {
+	// stage('Update kubeconfig') {
+          //  steps {
+            //    script {
                     //sh "aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME"
-                }
-            }
-        }
+            //    }
+           // }
+      //  }
         stage('Apply deployment manifest') {
             steps {
                 script {
