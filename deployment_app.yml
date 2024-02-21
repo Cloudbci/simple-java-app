@@ -12,30 +12,27 @@ spec:
   template:
     metadata:
       labels:
-        app: java-app  
+        app: java-app
     spec:
-     containers:
-      - name: simple-java-app-container
-        image: quay.io/cloudbeeci/simple-java-app:latest
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 8081
-     imagePullSecrets:
-      - name: quay-registry-secret
----          
- 
+      containers:
+        - name: simple-java-app-container
+          image: quay.io/cloudbeeci/simple-java-app:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8081
+      imagePullSecrets:
+        - name: quay-registry-secret
+---
 apiVersion: v1
 kind: Service
 metadata:
   name: simple-java-app
   namespace: cloudbeesci-java-app
-spec: 
+spec:
   selector:
-   name: java-app
+    app: java-app  # Match the labels used in the Deployment
   ports:
-   - name: http
-     port: 8081
-     targetPort: 8081
-# For Expose
+    - name: http
+      port: 8081
+      targetPort: 8081
   type: NodePort
-  
