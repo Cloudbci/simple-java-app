@@ -10,6 +10,7 @@ pipeline {
         CLUSTER_ACCESSKEY = credentials('CLUSTER_ACCESSKEY')
         CLUSTER_SECRETKEY = credentials('CLUSTER_SECRETKEY')
         CLUSTER_NAME = 'cloudbeesci.k8s.local'
+	S3_BUCKET_NAME = 's3://javamicroservices.k8s.local'
     }
 
     stages {
@@ -90,13 +91,13 @@ pipeline {
                 }
             }
 	}
-	// stage('Update kubeconfig') {
-          //  steps {
-            //    script {
-                    //sh "aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME"
-            //    }
-           // }
-      //  }
+	 stage('Update kubeconfig') {
+            steps {
+                script {
+                    sh "kops export kubecfg --name $CLUSTER_NAME --state $S3_BUCKET_NAME"
+                }
+            }
+        }
         stage('Apply deployment manifest') {
             steps {
                 script {
