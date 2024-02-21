@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: simple-java-app-container
-          image: quay.io/cloudbeeci/simple-java-app:latest
+          image: quay.io/cloudbeeci/simple-java-app:V1.0.0
           imagePullPolicy: Always
           ports:
             - containerPort: 8081
