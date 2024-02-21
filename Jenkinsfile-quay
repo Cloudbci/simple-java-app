@@ -6,7 +6,7 @@ pipeline {
         TAG_NAME = 'V1.0.0'
         QUAY_REGISTRY = 'quay.io/cloudbeeci/simple-java-app'
 	K8S_NAMESPACE = 'cloudbeesci-java-app'
-	AWS_REGION = credentials('AWS_REGION')
+	AWS_REGION = 'us-east-1'
         CLUSTER_ACCESSKEY = credentials('CLUSTER_ACCESSKEY')
         CLUSTER_SECRETKEY = credentials('CLUSTER_SECRETKEY')
         CLUSTER_NAME = 'cloudbeesci.k8s.local'
