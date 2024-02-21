@@ -9,7 +9,7 @@ pipeline {
 	AWS_REGION = credentials('AWS_REGION')
         CLUSTER_ACCESSKEY = credentials('CLUSTER_ACCESSKEY')
         CLUSTER_SECRETKEY = credentials('CLUSTER_SECRETKEY')
-        CLUSTER_NAME = credentials('CLUSTER_NAME')
+        CLUSTER_NAME = 'cloudbeesci.k8s.local'
     }
 
     stages {
@@ -83,9 +83,9 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'CLUSTER_ACCESSKEY', usernameVariable: 'AWS_ACCESS_KEY_USERNAME', passwordVariable: 'AWS_ACCESS_KEY_PASSWORD'),
                                      usernamePassword(credentialsId: 'CLUSTER_SECRETKEY', usernameVariable:: 'AWS_SECRET_ACCESS_KEY_USERNAME', passwordVariable: 'AWS_SECRET_ACCESS_KEY_PASSWORD' ),
 				     usernamePassword(credentialsId: 'AWS_REGION', usernameVariable: 'AWS_REGION_USERNAME', passwordVariable: 'AWS_REGION_PASSWORD' )]) {
-                        sh "aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID"
-                        sh "aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY"
-                        sh "aws configure set region $AWS_REGION"
+                        sh "aws configure set aws_access_key_id $AWS_ACCESS_KEY_PASSWORD"
+                        sh "aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY_PASSWORD"
+                        sh "aws configure set region $AWS_REGION_PASSWORD"
                     }
                 }
             }
