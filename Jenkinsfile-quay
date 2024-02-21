@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         IMAGE_NAME = 'cloudbeeci/simple-java-app'
-        TAG_NAME = 'V1.0.0'
+        TAG_NAME = 'V1.0.1'
         QUAY_REGISTRY = 'quay.io/cloudbeeci/simple-java-app'
 	K8S_NAMESPACE = 'cloudbeesci-java-app'
 	AWS_REGION = 'us-east-1'
