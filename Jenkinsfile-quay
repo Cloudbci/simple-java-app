@@ -80,9 +80,9 @@ pipeline {
 	stage('Configure AWS credentials') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'CLUSTER_ACCESSKEY', variable: 'AWS_ACCESS_KEY_ID'),
-                                     string(credentialsId: 'CLUSTER_SECRETKEY', variable: 'AWS_SECRET_ACCESS_KEY'),
-				     string(credentialsId: 'AWS_REGION', variable: 'AWS_REGION')]) {
+                    withCredentials([usernamePassword(credentialsId: 'CLUSTER_ACCESSKEY', usernameVariable: 'AWS_ACCESS_KEY_USERNAME', passwordVariable: 'AWS_ACCESS_KEY_PASSWORD'),
+                                     usernamePassword(credentialsId: 'CLUSTER_SECRETKEY', usernameVariable:: 'AWS_SECRET_ACCESS_KEY_USERNAME', passwordVariable: 'AWS_SECRET_ACCESS_KEY_PASSWORD' ),
+				     usernamePassword(credentialsId: 'AWS_REGION', usernameVariable: 'AWS_REGION_USERNAME', passwordVariable: 'AWS_REGION_PASSWORD' )]) {
                         sh "aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID"
                         sh "aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY"
                         sh "aws configure set region $AWS_REGION"
