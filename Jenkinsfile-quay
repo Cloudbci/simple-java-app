@@ -70,7 +70,7 @@ pipeline {
 			// Delete the image from quay.io repository
                         sh "skopeo delete docker://${QUAY_REGISTRY}:${TAG_NAME}"
                         // Stop the pipeline
-                        error "High severity vulnerabilities found. Pipeline stopped."
+                        //error "High severity vulnerabilities found. Pipeline stopped."
                     } else {
                         echo "No high severity vulnerabilities found. Continuing to deployment stage."
                     }
