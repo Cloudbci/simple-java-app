@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: simple-java-app-deployment
+  namespace: cloudbeesci-java-app
   labels:
     app: java-app
 spec:
