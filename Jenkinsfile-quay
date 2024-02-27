@@ -78,7 +78,7 @@ pipeline {
                 }
             }
         }
-	stage('Configure AWS credentials') {
+	stage('Connect to cluster and deploy container image') {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'CLUSTER_ACCESSKEY', usernameVariable: 'AWS_ACCESS_KEY_USERNAME', passwordVariable: 'AWS_ACCESS_KEY_PASSWORD'),
@@ -87,26 +87,29 @@ pipeline {
                         sh "aws configure set aws_access_key_id $AWS_ACCESS_KEY_PASSWORD"
                         sh "aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY_PASSWORD"
                         sh "aws configure set region $AWS_REGION_PASSWORD"
+			sh "kops export kubecfg --name $CLUSTER_NAME --state $S3_BUCKET_NAME"
+			sh "kubectl apply -f ./deployment.yml"
+		    	sh "echo deployed to EKS cluster"
                     }
                 }
             }
 	}
-	 stage('Update kubeconfig') {
-            steps {
-                script {
-                    sh "kops export kubecfg --name $CLUSTER_NAME --state $S3_BUCKET_NAME"
-                }
-            }
-        }
-        stage('Apply deployment manifest') {
-            steps {
-                script {
+	 //stage('Update kubeconfig') {
+           // steps {
+              //  script {
+               //     sh "kops export kubecfg --name $CLUSTER_NAME --state $S3_BUCKET_NAME"
+               // }
+          //  }
+        //}
+        //stage('Apply deployment manifest') {
+          //  steps {
+            //    script {
 		
-                    sh "kubectl apply -f ./deployment.yml"
-		    sh "echo deployed to EKS cluster"
-                }
-            }
-        }
+              //      sh "kubectl apply -f ./deployment.yml"
+		//    sh "echo deployed to EKS cluster"
+               // }
+           // }
+       // }
 	stage('Check deployment status') {
             steps {
                 script {
