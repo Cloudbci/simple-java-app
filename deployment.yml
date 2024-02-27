@@ -19,7 +19,8 @@ spec:
           image: quay.io/cloudbeeci/simple-java-app:V1.0.0
           imagePullPolicy: Always
           ports:
-            - containerPort: 8081
+           - name: http1
+             containerPort: 8081
       imagePullSecrets:
         - name: quay-secret-default
 ---
@@ -31,7 +32,7 @@ spec:
   selector:
     app: java-app  
   ports:
-    - name: http
+    - name: http1
       port: 8081
       targetPort: 8081
   type: LoadBalancer
