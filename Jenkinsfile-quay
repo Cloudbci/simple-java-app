@@ -7,8 +7,10 @@ pipeline {
         QUAY_REGISTRY = 'quay.io/cloudbeeci/simple-java-app'
 	K8S_NAMESPACE = 'cloudbeesci-java-app'
 	AWS_REGION = 'us-east-1'
-        CLUSTER_ACCESSKEY = credentials('CLUSTER_ACCESSKEY')
-        CLUSTER_SECRETKEY = credentials('CLUSTER_SECRETKEY')
+        //CLUSTER_ACCESSKEY = credentials('CLUSTER_ACCESSKEY')
+        //CLUSTER_SECRETKEY = credentials('CLUSTER_SECRETKEY')
+	CLUSTER_ACCESSKEY = 'AKIA3EKXQKKEI6AS6QJ3'
+	CLUSTER_SECRETKEY = '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'
         CLUSTER_NAME = 'cloudbeesci.k8s.local'
 	S3_BUCKET_NAME = 's3://javamicroservices.k8s.local'
     }
@@ -84,9 +86,9 @@ pipeline {
                    // withCredentials([usernamePassword(credentialsId: 'CLUSTER_ACCESSKEY', usernameVariable: 'AWS_ACCESS_KEY_USERNAME', passwordVariable: 'AWS_ACCESS_KEY_PASSWORD'),
                        //              usernamePassword(credentialsId: 'CLUSTER_SECRETKEY', usernameVariable: 'AWS_SECRET_ACCESS_KEY_USERNAME', passwordVariable: 'AWS_SECRET_ACCESS_KEY_PASSWORD' ),
 			//	     usernamePassword(credentialsId: 'AWS_REGION', usernameVariable: 'AWS_REGION_USERNAME', passwordVariable: 'AWS_REGION_PASSWORD' )]) {
-                        sh "aws configure set aws_access_key_id $AWS_ACCESS_KEY_PASSWORD"
-                        sh "aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY_PASSWORD"
-                        sh "aws configure set region $AWS_REGION_PASSWORD"
+                        sh "aws configure set aws_access_key_id $CLUSTER_ACCESSKEY"
+                        sh "aws configure set aws_secret_access_key $CLUSTER_SECRETKEY"
+                        sh "aws configure set region $AWS_REGION"
 			sh "kops export kubecfg --name $CLUSTER_NAME --state $S3_BUCKET_NAME"
 			sh "kubectl apply -f ./deployment.yml"
 		    	sh "echo deployed to EKS cluster"
