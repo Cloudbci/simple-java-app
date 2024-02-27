@@ -101,7 +101,7 @@ pipeline {
         stage('Apply deployment manifest') {
             steps {
                 script {
-                    sh "kubectl apply -f ./deployment_app.yml"
+                    sh "kubectl apply -f ./deployment_app.yml -v=9"
 		    sh "echo deployed to EKS cluster"
                 }
             }
