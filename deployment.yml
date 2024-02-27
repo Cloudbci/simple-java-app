@@ -29,7 +29,7 @@ metadata:
   name: simple-java-app
 spec:
   selector:
-    app: java-app  # Match the labels used in the Deployment
+    app: java-app  
   ports:
     - name: http
       port: 8080
