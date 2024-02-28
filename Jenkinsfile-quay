@@ -11,8 +11,8 @@ pipeline {
         //CLUSTER_SECRETKEY = credentials('CLUSTER_SECRETKEY')
 	CLUSTER_ACCESSKEY = 'AKIA3EKXQKKEI6AS6QJ3'
 	CLUSTER_SECRETKEY = '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'
-        CLUSTER_NAME = 'cloudbeesci.k8s.local'
-	S3_BUCKET_NAME = 's3://javamicroservices.k8s.local'
+        CLUSTER_NAME = 'joslin.k8s.local'
+	S3_BUCKET_NAME = 's3://joslin.k8s.local'
     }
 
     stages {
