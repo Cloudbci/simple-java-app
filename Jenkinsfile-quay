@@ -86,10 +86,10 @@ pipeline {
                    // withCredentials([usernamePassword(credentialsId: 'CLUSTER_ACCESSKEY', usernameVariable: 'AWS_ACCESS_KEY_USERNAME', passwordVariable: 'AWS_ACCESS_KEY_PASSWORD'),
                        //              usernamePassword(credentialsId: 'CLUSTER_SECRETKEY', usernameVariable: 'AWS_SECRET_ACCESS_KEY_USERNAME', passwordVariable: 'AWS_SECRET_ACCESS_KEY_PASSWORD' ),
 			//	     usernamePassword(credentialsId: 'AWS_REGION', usernameVariable: 'AWS_REGION_USERNAME', passwordVariable: 'AWS_REGION_PASSWORD' )]) {
-                        sh "aws configure set aws_access_key_id $CLUSTER_ACCESSKEY"
-                        sh "aws configure set aws_secret_access_key $CLUSTER_SECRETKEY"
-                        sh "aws configure set region $AWS_REGION"
-			sh "kops export kubecfg --name $CLUSTER_NAME --state $S3_BUCKET_NAME"
+                        sh "aws configure set aws_access_key_id AKIA3EKXQKKEAMHVYSEO"
+                        sh "aws configure set aws_secret_access_key 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"
+                        sh "aws configure set region us-east-1"
+			sh "kops export kubecfg --name joslinkops.k8s.local --state s3://joslin.k8s.local"
 			sh "kubectl apply -f ./deployment.yml"
 		    	sh "echo deployed to EKS cluster"
                     
