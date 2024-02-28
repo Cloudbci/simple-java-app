@@ -9,9 +9,9 @@ pipeline {
 	AWS_REGION = 'us-east-1'
         //CLUSTER_ACCESSKEY = credentials('CLUSTER_ACCESSKEY')
         //CLUSTER_SECRETKEY = credentials('CLUSTER_SECRETKEY')
-	CLUSTER_ACCESSKEY = 'AKIA3EKXQKKELWCAO4BJ'
-	CLUSTER_SECRETKEY = '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'
-        CLUSTER_NAME = 'joslin.k8s.local'
+	CLUSTER_ACCESSKEY = 'AKIA3EKXQKKEAMHVYSEO'
+	CLUSTER_SECRETKEY = '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'
+        CLUSTER_NAME = 'joslinkops.k8s.local'
 	S3_BUCKET_NAME = 's3://joslin.k8s.local'
     }
 
