@@ -22,7 +22,7 @@ spec:
             - name: http
               containerPort: 8085
       imagePullSecrets:
-        - name: josliniyda-j-pull-secret
+        - name: quay-secret-default-namespace
 ---
 apiVersion: v1
 kind: Service
