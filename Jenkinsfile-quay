@@ -95,7 +95,7 @@ pipeline {
             steps {
                 script {
                    // sh "kops export kubecfg --name $CLUSTER_NAME --state $S3_BUCKET_NAME"
-		   sh "kops export kubecfg --admin --state=$S3_BUCKET_NAME"
+		   sh "kops export kubecfg --admin --name $CLUSTER_NAME --state=$S3_BUCKET_NAME"
 		}
             }
         }
