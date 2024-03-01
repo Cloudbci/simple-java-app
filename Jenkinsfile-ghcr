@@ -2,9 +2,11 @@ pipeline {
 	agent any
     //agent { label 'ubuntu' }
     environment {
+	VERSION = "${env.BUILD_ID}-${env.GIT_COMMIT}"
         DOCKER_IMAGE_NAME = 'simple-java-app'
-	TAG_NAME = 'V1.0.1'
+	TAG_NAME = ${VERSION}
         GHCR_REGISTRY = 'ghcr.io/cloudbci'   
+	JENKINS_URL='http://3.7.71.215:8080/'
     }
     stages {
         stage('Maven Package') {           
@@ -17,8 +19,12 @@ pipeline {
         }
         stage('Build Docker Image') {    
             steps {
+		echo "Running ${VERSION} on ${env.JENKINS_URL}"
+            	git branch: "${BRANCH}",  .....
+            	echo "for brnach ${env.BRANCH_NAME}"
                 script {
-                    sh "docker build -f Dockerfile-app -t ${DOCKER_IMAGE_NAME} ."
+            		sh "docker tag ${NAME}:latest ${IMAGE_REPO}/${NAME}:${VERSION}"
+                    	sh "docker build -f Dockerfile-app -t ${DOCKER_IMAGE_NAME} ."
                 }
             }
         }
