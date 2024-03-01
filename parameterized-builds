@@ -17,7 +17,7 @@ pipeline {
         stage('Display file contents from branch') {
             steps {
                 script {
-                    sh "cat test.txt"
+                    sh "cat ./test.txt"
                 }
             }
         }
