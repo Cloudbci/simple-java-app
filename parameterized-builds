@@ -1,16 +1,34 @@
-properties([parameters([choice(choices: 'main\ndev', description: 'Select Branch to build', name: 'branch')])])
+properties([
+    parameters([
+        choice(choices: 'main\ndev', description: 'Select Branch to build', name: 'branch')
+    ])
+])
 
 pipeline {
     agent any
+    
     stages {
         stage('Scm Checkout') {
             steps {
+                echo "Pulling changes from the branch ${params.branch}"
+                git url: 'https://github.com/Cloudbci/simple-java-app', branch: "${params.branch}"
+            }
+        }
+        stage('Display file contents from branch') {
+            steps {
                 script {
-                    sh "echo "Pulling changes from the branch ${params.branch}"
-                    git url: 'https://github.com/Cloudbci/simple-java-app.git', branch: "${params.branch}"
-                    sh 'cat test.txt'
+                    sh "cat test.txt"
                 }
             }
         }
-    }   
+}
+    
+    post {
+        success {
+            echo "Pipeline succeeded! Branch ${params.branch} was built successfully."
+        }
+        failure {
+            echo "Pipeline failed! Branch ${params.branch} failed to build."
+        }
+    }
 }
