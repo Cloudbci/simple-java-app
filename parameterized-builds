@@ -17,7 +17,9 @@ pipeline {
         stage('Display file contents from branch') {
             steps {
                 script {
-                    sh "cat ./test.txt"
+                    def fileContent = readFile('./test.txt')
+                    echo "Contents of test.txt:"
+                    echo fileContent
                 }
             }
         }
