@@ -23,8 +23,7 @@ pipeline {
             	git branch: "${BRANCH}",  .....
             	echo "for brnach ${env.BRANCH_NAME}"
                 script {
-            		sh "docker tag ${NAME}:latest ${IMAGE_REPO}/${NAME}:${VERSION}"
-                    	sh "docker build -f Dockerfile-app -t ${DOCKER_IMAGE_NAME} ."
+                    	sh "docker build -f Dockerfile-app -t ${DOCKER_IMAGE_NAME}:${TAG_NAME} ."
                 }
             }
         }
@@ -34,7 +33,7 @@ pipeline {
                  script {
                      withCredentials([usernamePassword(credentialsId: 'GH_PAT_TOKEN', usernameVariable: 'GHCR_USERNAME', passwordVariable: 'MYGH_TOKEN')]) {
                      sh "echo ${MYGH_TOKEN} | docker login --username ${GHCR_USERNAME} --password-stdin ghcr.io" }
-		     sh "docker tag ${DOCKER_IMAGE_NAME} ${GHCR_REGISTRY}/${DOCKER_IMAGE_NAME}:${TAG_NAME}"
+		     sh "docker tag ${DOCKER_IMAGE_NAME}:${TAG_NAME} ${GHCR_REGISTRY}/${DOCKER_IMAGE_NAME}:${TAG_NAME}"
      		     sh "docker push ${GHCR_REGISTRY}/${DOCKER_IMAGE_NAME}:${TAG_NAME}"
                  }
              }
