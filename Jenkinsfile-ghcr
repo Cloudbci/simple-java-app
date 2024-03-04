@@ -2,9 +2,9 @@ pipeline {
 	agent any
     //agent { label 'ubuntu' }
     environment {
-	#VERSION = "${env.BUILD_NUMBER}"
+	//VERSION = "${env.BUILD_NUMBER}"
         DOCKER_IMAGE_NAME = 'simple-java-app'
-	#TAG_NAME = ${VERSION}
+	//TAG_NAME = ${VERSION}
         GHCR_REGISTRY = 'ghcr.io/cloudbci'   
 	JENKINS_URL='http://13.200.229.152:8080//'
     }
