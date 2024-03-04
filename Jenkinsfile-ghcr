@@ -2,7 +2,7 @@ pipeline {
 	agent any
     //agent { label 'ubuntu' }
 parameters {
-        string(name: 'VERSION_NUMBER', defaultValue: '', description: 'Enter the first two digits of the version number in Vmajor.minor format:')
+        string(name: 'VERSION_NUMBER', defaultValue: 'V0.0', description: 'Enter the first two digits of the version number in Vmajor.minor format:', trim: true)
     }
     environment {
         DOCKER_IMAGE_NAME = 'simple-java-app'
