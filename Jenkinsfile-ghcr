@@ -54,7 +54,7 @@ parameters {
          stage('Docker deployment'){
           steps {
 	      script {
-                    sh 'docker run -dit -p 8081:8080 --name simple-java-app ${GHCR_REGISTRY}/${DOCKER_IMAGE_NAME}:${TAG_NAME}' 
+                    sh 'docker run -dit -p 8082:8080 --name simple-java-app ${GHCR_REGISTRY}/${DOCKER_IMAGE_NAME}:${TAG_NAME}' 
                 }
            }
          }
