@@ -2,11 +2,11 @@ pipeline {
 	agent any
     //agent { label 'ubuntu' }
     environment {
-	VERSION = "${env.BUILD_ID}-${env.GIT_COMMIT}"
+	VERSION = "${env.BUILD_NUMBER}"
         DOCKER_IMAGE_NAME = 'simple-java-app'
 	TAG_NAME = ${VERSION}
         GHCR_REGISTRY = 'ghcr.io/cloudbci'   
-	JENKINS_URL='http://3.7.71.215:8080/'
+	JENKINS_URL='http://13.200.229.152:8080//'
     }
     stages {
         stage('Maven Package') {           
