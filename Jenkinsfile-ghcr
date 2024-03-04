@@ -4,12 +4,12 @@ pipeline {
 parameters {
         string(name: 'VERSION_PREFIX', defaultValue: 'V0.0', description: 'Enter the first two digits of the version number in Vmajor.minor format:', trim: true)
     }
-    environment {
-        DOCKER_IMAGE_NAME = 'simple-java-app'
-	VERSION_NUMBER = ${params.VERSION_PREFIX}
-        TAG_NAME = "${VERSION_NUMBER}.${env.BUILD_NUMBER}"
-        GHCR_REGISTRY = 'ghcr.io/cloudbci'   
-    }
+environment {
+    DOCKER_IMAGE_NAME = 'simple-java-app'
+    VERSION_NUMBER = "${params.VERSION_PREFIX}"
+    TAG_NAME = "${VERSION_NUMBER}.${env.BUILD_NUMBER}"
+    GHCR_REGISTRY = 'ghcr.io/cloudbci'   
+}
     stages {
         stage('Maven Package') {           
             steps {
