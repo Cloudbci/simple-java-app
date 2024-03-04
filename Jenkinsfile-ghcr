@@ -26,7 +26,7 @@ pipeline {
                 script {
 			def buildNumber = env.BUILD_NUMBER
                     	echo "Build Number: ${buildNumber}"
-                    	sh "docker build -f Dockerfile-app -t ${DOCKER_IMAGE_NAME}:${TAG_NAME} ."
+                    	sh "docker build -f Dockerfile-app -t ${DOCKER_IMAGE_NAME}:$buildnumber ."
                 }
             }
         }
