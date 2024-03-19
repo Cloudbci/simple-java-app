@@ -1,6 +1,5 @@
 pipeline {
 	agent any
-    //agent { label 'ubuntu' }
 options {
           buildDiscarder logRotator(artifactDaysToKeepStr:'', artifactNumToKeepStr:'5', daysToKeeyStr:'', numToKeepStr:'5') 
           disableConcurrentBuilds()
